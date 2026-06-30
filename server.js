@@ -133,3 +133,5 @@ app.listen(PORT, () => {
   console.log('  Admin: http://localhost:' + PORT + '/admin.html');
   console.log('');
 });
+
+module.exports = app;
