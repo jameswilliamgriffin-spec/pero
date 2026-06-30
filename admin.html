@@ -76,11 +76,6 @@
       border-color: #C8EC66;
     }
 
-    .admin__input[type="file"] {
-      padding: 0.5rem;
-      cursor: pointer;
-    }
-
     .admin__btn {
       width: 100%;
       background: #C8EC66;
@@ -93,12 +88,17 @@
       letter-spacing: 0.15em;
       padding: 1rem;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: background 0.2s, opacity 0.2s;
     }
 
-    .admin__btn:hover {
+    .admin__btn:hover:not(:disabled) {
       background: #D25D27;
       color: #fff;
+    }
+
+    .admin__btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
     }
 
     .admin__status {
@@ -108,10 +108,12 @@
       text-transform: uppercase;
       min-height: 1.5rem;
       opacity: 0.7;
+      transition: opacity 0.4s ease;
     }
 
     .admin__status--success { color: #C8EC66; }
     .admin__status--error   { color: #D25D27; }
+    .admin__status--fade    { opacity: 0; }
 
     #adminLogin { display: block; }
     #adminPanel { display: none; }
@@ -143,6 +145,123 @@
     }
 
     .admin__back:hover { opacity: 0.8; }
+    .admin__back--disabled {
+      pointer-events: none;
+      opacity: 0.2;
+    }
+
+    /* CURRENT MENU PREVIEW */
+    .admin__preview {
+      border: 1px solid rgba(200,236,102,0.2);
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+      display: none;
+    }
+
+    .admin__preview iframe {
+      width: 100%;
+      height: 220px;
+      border: none;
+      display: block;
+      background: #0e0e0e;
+    }
+
+    .admin__preview-caption {
+      padding: 0.6rem 1rem;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.5;
+      border-top: 1px solid rgba(200,236,102,0.15);
+    }
+
+    /* DROPZONE */
+    .admin__dropzone {
+      border: 1px dashed rgba(200,236,102,0.35);
+      padding: 1.5rem 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      position: relative;
+    }
+
+    .admin__dropzone:hover,
+    .admin__dropzone--active {
+      border-color: #C8EC66;
+      background: rgba(200,236,102,0.05);
+    }
+
+    .admin__dropzone input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .admin__dropzone-text {
+      font-size: 0.85rem;
+      letter-spacing: 0.05em;
+      opacity: 0.6;
+    }
+
+    .admin__dropzone-sub {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      opacity: 0.35;
+      margin-top: 0.4rem;
+    }
+
+    /* SELECTED FILE PREVIEW */
+    .admin__file-preview {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      border: 1px solid rgba(200,236,102,0.25);
+      padding: 0.75rem 1rem;
+      margin-top: 0.75rem;
+      font-size: 0.8rem;
+    }
+
+    .admin__file-name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .admin__file-size {
+      opacity: 0.5;
+      font-size: 0.7rem;
+      flex-shrink: 0;
+    }
+
+    .admin__file-clear {
+      background: none;
+      border: none;
+      color: #D25D27;
+      cursor: pointer;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+      line-height: 1;
+      padding: 0.2rem;
+    }
+
+    /* PROGRESS BAR */
+    .admin__progress {
+      display: none;
+      height: 4px;
+      background: rgba(200,236,102,0.15);
+      margin-top: 1rem;
+      overflow: hidden;
+    }
+
+    .admin__progress-bar {
+      height: 100%;
+      width: 0%;
+      background: #C8EC66;
+      transition: width 0.15s ease;
+    }
 
   </style>
 </head>
@@ -180,17 +299,34 @@
       Checking current menu...
     </div>
 
+    <div class="admin__preview" id="menuPreview">
+      <iframe id="menuPreviewFrame" title="Current menu preview"></iframe>
+      <div class="admin__preview-caption">Live preview of current menu</div>
+    </div>
+
     <hr class="admin__divider">
 
     <div class="admin__field">
       <label class="admin__label" for="menuFile">Select menu PDF</label>
-      <input class="admin__input"
-             type="file"
-             id="menuFile"
-             accept=".pdf">
+
+      <div class="admin__dropzone" id="dropzone">
+        <input type="file" id="menuFile" accept=".pdf">
+        <div class="admin__dropzone-text">Drop PDF here or click to browse</div>
+        <div class="admin__dropzone-sub">PDF only · 20MB max</div>
+      </div>
+
+      <div class="admin__file-preview" id="filePreview">
+        <span class="admin__file-name" id="fileName"></span>
+        <span class="admin__file-size" id="fileSize"></span>
+        <button type="button" class="admin__file-clear" id="fileClear" title="Remove selected file">✕</button>
+      </div>
     </div>
 
     <button class="admin__btn" id="uploadBtn">Upload Menu</button>
+
+    <div class="admin__progress" id="progressWrap">
+      <div class="admin__progress-bar" id="progressBar"></div>
+    </div>
 
     <p class="admin__status" id="uploadStatus"></p>
 
@@ -202,7 +338,7 @@
       Remove Current Menu
     </button>
 
-    <a href="index.html" class="admin__back">← Back to site</a>
+    <a href="index.html" class="admin__back" id="backLink">← Back to site</a>
   </div>
 
 </div>
@@ -213,7 +349,9 @@
    Change ADMIN_PASSWORD below
    ---------------------------------------- */
 
-const ADMIN_PASSWORD = 'perro2025';
+const ADMIN_PASSWORD = 'Goldie2026';
+
+let isBusy = false; // true while an upload/remove request is in flight
 
 document.getElementById('loginBtn').addEventListener('click', () => {
   const pw     = document.getElementById('adminPassword').value;
@@ -233,83 +371,225 @@ document.getElementById('adminPassword').addEventListener('keydown', (e) => {
   if (e.key === 'Enter') document.getElementById('loginBtn').click();
 });
 
-async function checkCurrentMenu() {
-  const info = document.getElementById('currentMenuInfo');
-  try {
-    const res  = await fetch('/api/current-menu', { cache: 'no-cache' });
-    const data = await res.json();
-    if (data.exists && data.updated) {
-      const date = new Date(data.updated).toLocaleDateString('en-GB');
-      info.textContent = 'Current menu uploaded ' + date;
-    } else {
-      info.textContent = 'No menu currently uploaded.';
-    }
-  } catch {
-    info.textContent = 'No menu currently uploaded.';
+/* ----------------------------------------
+   STATUS TOASTS (auto-dismiss)
+   ---------------------------------------- */
+
+let statusTimer = null;
+
+function setStatus(message, type) {
+  const status = document.getElementById('uploadStatus');
+  clearTimeout(statusTimer);
+  status.classList.remove('admin__status--fade');
+  status.textContent = message;
+  status.className   = 'admin__status' + (type ? ' admin__status--' + type : '');
+
+  if (type === 'success') {
+    statusTimer = setTimeout(() => {
+      status.classList.add('admin__status--fade');
+    }, 4000);
   }
 }
 
-document.getElementById('uploadBtn').addEventListener('click', async () => {
-  const fileInput = document.getElementById('menuFile');
-  const status    = document.getElementById('uploadStatus');
+/* ----------------------------------------
+   CURRENT MENU + PREVIEW
+   ---------------------------------------- */
 
+async function checkCurrentMenu() {
+  const info       = document.getElementById('currentMenuInfo');
+  const preview    = document.getElementById('menuPreview');
+  const previewFrm = document.getElementById('menuPreviewFrame');
+
+  try {
+    const res  = await fetch('/api/current-menu', { cache: 'no-cache' });
+    const data = await res.json();
+
+    if (data.exists && data.url) {
+      const date = new Date(data.updated).toLocaleDateString('en-GB');
+      info.textContent     = 'Current menu uploaded ' + date;
+      previewFrm.src        = data.url;
+      preview.style.display = 'block';
+    } else {
+      info.textContent      = 'No menu currently uploaded.';
+      preview.style.display = 'none';
+      previewFrm.src         = '';
+    }
+  } catch {
+    info.textContent      = 'No menu currently uploaded.';
+    preview.style.display = 'none';
+    previewFrm.src         = '';
+  }
+}
+
+/* ----------------------------------------
+   FILE SELECTION — dropzone + preview
+   ---------------------------------------- */
+
+const dropzone     = document.getElementById('dropzone');
+const fileInput    = document.getElementById('menuFile');
+const filePreview  = document.getElementById('filePreview');
+const fileNameEl   = document.getElementById('fileName');
+const fileSizeEl   = document.getElementById('fileSize');
+const fileClearBtn = document.getElementById('fileClear');
+
+function formatBytes(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+  return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+}
+
+function showSelectedFile(file) {
+  fileNameEl.textContent     = file.name;
+  fileSizeEl.textContent     = formatBytes(file.size);
+  filePreview.style.display  = 'flex';
+}
+
+function clearSelectedFile() {
+  fileInput.value = '';
+  filePreview.style.display = 'none';
+}
+
+fileInput.addEventListener('change', () => {
+  if (fileInput.files.length) {
+    const file = fileInput.files[0];
+    if (file.type === 'application/pdf') {
+      showSelectedFile(file);
+      setStatus('', '');
+    } else {
+      clearSelectedFile();
+      setStatus('Please select a PDF file.', 'error');
+    }
+  } else {
+    clearSelectedFile();
+  }
+});
+
+fileClearBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  clearSelectedFile();
+});
+
+['dragenter', 'dragover'].forEach(evt => {
+  dropzone.addEventListener(evt, (e) => {
+    e.preventDefault();
+    dropzone.classList.add('admin__dropzone--active');
+  });
+});
+
+['dragleave', 'drop'].forEach(evt => {
+  dropzone.addEventListener(evt, (e) => {
+    e.preventDefault();
+    dropzone.classList.remove('admin__dropzone--active');
+  });
+});
+
+dropzone.addEventListener('drop', (e) => {
+  const dropped = e.dataTransfer.files;
+  if (dropped.length) {
+    fileInput.files = dropped;
+    fileInput.dispatchEvent(new Event('change'));
+  }
+});
+
+/* ----------------------------------------
+   UPLOAD — with progress bar + button states
+   ---------------------------------------- */
+
+const uploadBtn    = document.getElementById('uploadBtn');
+const removeBtn    = document.getElementById('removeBtn');
+const backLink     = document.getElementById('backLink');
+const progressWrap = document.getElementById('progressWrap');
+const progressBar  = document.getElementById('progressBar');
+
+function setBusy(busy) {
+  isBusy = busy;
+  uploadBtn.disabled = busy;
+  removeBtn.disabled = busy;
+  if (busy) {
+    backLink.classList.add('admin__back--disabled');
+  } else {
+    backLink.classList.remove('admin__back--disabled');
+  }
+}
+
+window.addEventListener('beforeunload', (e) => {
+  if (isBusy) {
+    e.preventDefault();
+    e.returnValue = '';
+  }
+});
+
+uploadBtn.addEventListener('click', () => {
   if (!fileInput.files.length) {
-    status.textContent = 'Please select a PDF file.';
-    status.className   = 'admin__status admin__status--error';
+    setStatus('Please select a PDF file.', 'error');
     return;
   }
 
   const file = fileInput.files[0];
 
   if (file.type !== 'application/pdf') {
-    status.textContent = 'Please select a PDF file.';
-    status.className   = 'admin__status admin__status--error';
+    setStatus('Please select a PDF file.', 'error');
     return;
   }
-
-  status.textContent = 'Uploading...';
-  status.className   = 'admin__status';
 
   const formData = new FormData();
   formData.append('menu', file);
 
-  try {
-    /*
-      BACKEND ENDPOINT — replace URL with Node/Express upload route.
-      Build this in the next prompt.
-    */
-    const res = await fetch('/api/upload-menu', { method: 'POST', body: formData });
+  setBusy(true);
+  setStatus('Uploading...', '');
+  progressWrap.style.display = 'block';
+  progressBar.style.width    = '0%';
 
-    if (res.ok) {
-      status.textContent = 'Menu uploaded successfully.';
-      status.className   = 'admin__status admin__status--success';
+  const xhr = new XMLHttpRequest();
+  xhr.open('POST', '/api/upload-menu');
+
+  xhr.upload.addEventListener('progress', (e) => {
+    if (e.lengthComputable) {
+      const pct = Math.round((e.loaded / e.total) * 100);
+      progressBar.style.width = pct + '%';
+    }
+  });
+
+  xhr.addEventListener('load', () => {
+    setBusy(false);
+    progressWrap.style.display = 'none';
+
+    if (xhr.status >= 200 && xhr.status < 300) {
+      setStatus('Menu uploaded successfully.', 'success');
+      clearSelectedFile();
       checkCurrentMenu();
     } else {
-      throw new Error('Upload failed');
+      setStatus('Upload failed. Is the server running?', 'error');
     }
-  } catch (err) {
-    status.textContent = 'Upload failed. Is the server running?';
-    status.className   = 'admin__status admin__status--error';
-  }
+  });
+
+  xhr.addEventListener('error', () => {
+    setBusy(false);
+    progressWrap.style.display = 'none';
+    setStatus('Upload failed. Is the server running?', 'error');
+  });
+
+  xhr.send(formData);
 });
 
-document.getElementById('removeBtn').addEventListener('click', async () => {
+removeBtn.addEventListener('click', async () => {
   if (!confirm('Remove the current menu from the site?')) return;
 
-  const status = document.getElementById('uploadStatus');
+  setBusy(true);
+  setStatus('Removing...', '');
 
   try {
     const res = await fetch('/api/remove-menu', { method: 'POST' });
     if (res.ok) {
-      status.textContent = 'Menu removed.';
-      status.className   = 'admin__status admin__status--success';
+      setStatus('Menu removed.', 'success');
       checkCurrentMenu();
     } else {
       throw new Error('Remove failed');
     }
   } catch (err) {
-    status.textContent = 'Remove failed. Is the server running?';
-    status.className   = 'admin__status admin__status--error';
+    setStatus('Remove failed. Is the server running?', 'error');
+  } finally {
+    setBusy(false);
   }
 });
 </script>
