@@ -236,11 +236,11 @@ document.getElementById('adminPassword').addEventListener('keydown', (e) => {
 async function checkCurrentMenu() {
   const info = document.getElementById('currentMenuInfo');
   try {
-    const res      = await fetch('menu/current/manifest.json', { cache: 'no-cache' });
-    const manifest = await res.json();
-    if (manifest.filename) {
-      const date = new Date(manifest.updated).toLocaleDateString('en-GB');
-      info.textContent = 'Current menu: ' + manifest.filename + ' — uploaded ' + date;
+    const res  = await fetch('/api/current-menu', { cache: 'no-cache' });
+    const data = await res.json();
+    if (data.exists && data.updated) {
+      const date = new Date(data.updated).toLocaleDateString('en-GB');
+      info.textContent = 'Current menu uploaded ' + date;
     } else {
       info.textContent = 'No menu currently uploaded.';
     }
