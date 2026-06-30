@@ -1,11 +1,25 @@
-const express = require('express');
-const multer  = require('multer');
-const cors    = require('cors');
-const path    = require('path');
-const fs      = require('fs');
+require('dotenv').config();
+
+const express    = require('express');
+const multer     = require('multer');
+const cors       = require('cors');
+const path       = require('path');
+const cloudinary = require('cloudinary').v2;
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
+
+/* ----------------------------------------
+   CLOUDINARY CONFIG
+   ---------------------------------------- */
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key:    process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
+const MENU_PUBLIC_ID = 'perro/menu';
 
 /* ----------------------------------------
    MIDDLEWARE
@@ -16,26 +30,11 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 
 /* ----------------------------------------
-   MULTER — FILE UPLOAD CONFIG
+   MULTER — IN-MEMORY STORAGE
    ---------------------------------------- */
 
-const menuDir = path.join(__dirname, 'menu', 'current');
-
-if (!fs.existsSync(menuDir)) {
-  fs.mkdirSync(menuDir, { recursive: true });
-}
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, menuDir);
-  },
-  filename: (req, file, cb) => {
-    cb(null, 'menu.pdf');
-  }
-});
-
 const upload = multer({
-  storage,
+  storage: multer.memoryStorage(),
   limits: { fileSize: 20 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     if (file.mimetype === 'application/pdf') {
@@ -47,43 +46,55 @@ const upload = multer({
 });
 
 /* ----------------------------------------
-   API ROUTES
+   ROUTES
    ---------------------------------------- */
 
-app.post('/api/upload-menu', upload.single('menu'), (req, res) => {
+app.post('/api/upload-menu', upload.single('menu'), async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: 'No file uploaded' });
   }
 
-  const manifest = {
-    filename:     'menu.pdf',
-    updated:      new Date().toISOString(),
-    originalName: req.file.originalname,
-    size:         req.file.size
-  };
-
-  const manifestPath = path.join(menuDir, 'manifest.json');
-
   try {
-    fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
-    console.log('Menu uploaded:', manifest);
-    res.json({ success: true, manifest });
+    const fileBase64 = 'data:application/pdf;base64,' +
+      req.file.buffer.toString('base64');
+
+    const result = await cloudinary.uploader.upload(fileBase64, {
+      public_id:     MENU_PUBLIC_ID + '.pdf',
+      resource_type: 'raw',
+      overwrite:     true,
+      invalidate:    true,
+      format:        'pdf'
+    });
+
+    console.log('Menu uploaded to Cloudinary:', result.secure_url);
+    res.json({
+      success:      true,
+      url:          result.secure_url,
+      updated:      new Date().toISOString(),
+      originalName: req.file.originalname
+    });
+
   } catch (err) {
-    console.error('Manifest write failed:', err);
-    res.status(500).json({ error: 'Failed to save manifest' });
+    console.error('Cloudinary upload failed:', err);
+    res.status(500).json({ error: 'Upload to Cloudinary failed' });
   }
 });
 
-app.post('/api/remove-menu', (req, res) => {
-  const pdfPath      = path.join(menuDir, 'menu.pdf');
-  const manifestPath = path.join(menuDir, 'manifest.json');
-
+app.get('/api/current-menu', async (req, res) => {
   try {
-    if (fs.existsSync(pdfPath)) {
-      fs.unlinkSync(pdfPath);
-    }
-    fs.writeFileSync(manifestPath, JSON.stringify({}, null, 2));
-    console.log('Menu removed');
+    const result = await cloudinary.api.resource(MENU_PUBLIC_ID + '.pdf', {
+      resource_type: 'raw'
+    });
+    res.json({ exists: true, url: result.secure_url, updated: result.created_at });
+  } catch (err) {
+    res.json({ exists: false });
+  }
+});
+
+app.post('/api/remove-menu', async (req, res) => {
+  try {
+    await cloudinary.uploader.destroy(MENU_PUBLIC_ID + '.pdf', { resource_type: 'raw' });
+    console.log('Menu removed from Cloudinary');
     res.json({ success: true });
   } catch (err) {
     console.error('Remove failed:', err);

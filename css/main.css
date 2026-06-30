@@ -641,7 +641,7 @@ body {
 .marquee__inner {
   display: flex;
   white-space: nowrap;
-  animation: marquee-scroll 28s linear infinite;
+  animation: marquee-scroll 14s linear infinite;
 }
 
 .marquee__sep {

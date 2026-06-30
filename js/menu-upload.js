@@ -1,12 +1,10 @@
-// Checks for uploaded menu PDF and renders it, or shows placeholder
-
 async function loadMenu() {
   try {
-    const response = await fetch('menu/current/manifest.json', { cache: 'no-cache' });
-    if (!response.ok) throw new Error('No menu');
-    const manifest = await response.json();
-    if (manifest && manifest.filename) {
-      showMenu(manifest);
+    const response = await fetch('/api/current-menu', { cache: 'no-cache' });
+    const data     = await response.json();
+
+    if (data.exists && data.url) {
+      showMenu(data.url, data.updated);
     } else {
       showPlaceholder();
     }
@@ -16,23 +14,21 @@ async function loadMenu() {
   }
 }
 
-function showMenu(manifest) {
+function showMenu(url, updated) {
   const placeholder = document.getElementById('menuPlaceholder');
   const pdfWrap     = document.getElementById('menuPdfWrap');
   const iframe      = document.getElementById('menuIframe');
   const download    = document.getElementById('menuDownload');
-  const updated     = document.getElementById('menuUpdated');
-
-  const pdfPath = 'menu/current/' + manifest.filename;
+  const updatedEl   = document.getElementById('menuUpdated');
 
   placeholder.style.display = 'none';
   pdfWrap.style.display     = 'block';
-  iframe.src                = pdfPath;
-  download.href             = pdfPath;
+  iframe.src                = url;
+  download.href             = url;
 
-  if (manifest.updated) {
-    const date = new Date(manifest.updated);
-    updated.textContent = 'Updated ' + date.toLocaleDateString('en-GB', {
+  if (updated) {
+    const date = new Date(updated);
+    updatedEl.textContent = 'Updated ' + date.toLocaleDateString('en-GB', {
       day: 'numeric', month: 'long', year: 'numeric'
     });
   }
