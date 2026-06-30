@@ -126,12 +126,14 @@ app.use((err, req, res, next) => {
    START
    ---------------------------------------- */
 
-app.listen(PORT, () => {
-  console.log('');
-  console.log('  PERRO — Server running');
-  console.log('  http://localhost:' + PORT);
-  console.log('  Admin: http://localhost:' + PORT + '/admin.html');
-  console.log('');
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log('');
+    console.log('  PERRO — Server running');
+    console.log('  http://localhost:' + PORT);
+    console.log('  Admin: http://localhost:' + PORT + '/admin.html');
+    console.log('');
+  });
+}
 
 module.exports = app;
