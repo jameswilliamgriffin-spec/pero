@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perro — Kings Heath, Birmingham</title>
+  <meta name="description" content="Taqueria El Perro — Mexican-inspired food and great drinks in Kings Heath, Birmingham. Wed–Fri 1800–Late, Sat–Sun 1200–Late.">
+  <meta property="og:title" content="Perro — Kings Heath">
+  <meta property="og:description" content="Mexican-inspired. British soul. Kings Heath, Birmingham.">
+  <meta property="og:image" content="assets/images/food/IMG_3441.jpg">
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="nav__logo">
+      <img class="nav__logo--default" src="assets/images/logo.png" alt="Perro">
+      <img class="nav__logo--white" src="assets/images/logo_white.png" alt="Perro">
+    </div>
+    <ul class="nav__links">
+      <li><a href="#menu">Menu</a></li>
+      <li class="nav__hide-mobile"><a href="#food">Food</a></li>
+      <li class="nav__hide-mobile"><a href="#drinks">Drinks</a></li>
+      <li><a href="#find-us">Find Us</a></li>
+      <li><a class="nav__book" href="#book">Book</a></li>
+    </ul>
+  </nav>
+
+  <section class="hero" id="hero">
+
+    <!-- Background texture layers -->
+    <div class="hero__texture hero__texture--grunge"></div>
+    <div class="hero__texture hero__texture--sprite"></div>
+
+    <!-- Dog illustration — bleeds off right edge -->
+    <div class="hero__dog"></div>
+
+    <!-- Barbed wire divider across middle -->
+    <div class="hero__barb"></div>
+
+    <!-- Sprite decorations from assetsprite.png -->
+    <div class="sprite sprite--barb-wire"></div>
+    <div class="sprite sprite--chain"></div>
+    <div class="sprite sprite--crosshair"></div>
+    <div class="sprite sprite--x-mark"></div>
+    <div class="sprite sprite--barcode"></div>
+    <div class="sprite sprite--safety-pin"></div>
+    <div class="sprite sprite--arrow"></div>
+    <div class="sprite sprite--ink-blob-1"></div>
+    <div class="sprite sprite--ink-blob-2"></div>
+
+    <!-- Sprite decorations from grunge_sprite.png -->
+    <div class="sprite sprite--grunge-1"></div>
+    <div class="sprite sprite--grunge-2"></div>
+    <div class="sprite sprite--grunge-3"></div>
+
+    <!-- Main content -->
+    <div class="hero__content">
+
+      <!-- Logo centred -->
+      <div class="hero__logo">
+        <img src="assets/images/logo.png" alt="Perro">
+      </div>
+
+      <!-- Stamp line above headline -->
+      <p class="hero__pre stamp">Kings Heath, Birmingham</p>
+
+      <!-- Main statement — three lines, each a poster -->
+      <h1 class="hero__headline headline">
+        <span class="hero__line hero__line--1">Mexican</span>
+        <span class="hero__line hero__line--2">inspired.</span>
+        <span class="hero__line hero__line--3 display">British soul.</span>
+      </h1>
+
+      <!-- Food hero image -->
+      <div class="hero__image">
+        <img src="assets/images/food/IMG_3441.jpg"
+             alt="Food at Perro">
+      </div>
+
+      <!-- Review pull quote -->
+      <blockquote class="hero__quote">
+        <p>"One of everything."</p>
+        <cite>Lauren Potts — Time Out Birmingham</cite>
+      </blockquote>
+
+      <!-- CTAs -->
+      <div class="hero__ctas">
+        <a href="#book" class="btn btn--primary">Book a Table</a>
+        <a href="#menu" class="btn btn--ghost">View Menu</a>
+      </div>
+
+      <p class="hero__tagline headline">
+        Seasonal. Local.<br>No apologies.
+      </p>
+
+    </div>
+
+    <!-- Beer gif — editorial top-right, desktop only -->
+    <div class="hero__gif" aria-hidden="true">
+      <img src="assets/images/food/beer.gif" alt="">
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="hero__scroll stamp">scroll</div>
+
+  </section>
+
+  <div class="section-break"></div>
+
+  <section class="food" id="food">
+
+    <div class="food__header">
+      <span class="stamp food__label">The Food</span>
+      <h2 class="headline food__headline">
+        <span>Cooked with</span>
+        <span class="display">Love.</span>
+        <span>Eaten with hands.</span>
+      </h2>
+    </div>
+
+    <!-- Sprite divider -->
+    <div class="section-barb"></div>
+
+    <!-- Editorial image grid -->
+    <div class="food__grid">
+
+      <!-- Large hero image — full width -->
+      <div class="food__item food__item--full">
+        <img src="assets/images/food/IMG_3433.jpg"
+             alt="Tacos being prepared"
+             loading="lazy">
+        <!-- Revolving marquee overlaid on image -->
+        <div class="marquee" aria-hidden="true">
+          <div class="marquee__inner">
+            <span class="marquee__track">Savy B Spritz &nbsp;&nbsp;<img class="marquee__sep" src="assets/images/furniture/x.png" alt="">&nbsp;&nbsp; Tacos &nbsp;&nbsp;<img class="marquee__sep" src="assets/images/furniture/x.png" alt="">&nbsp;&nbsp; Corn Sazerac &nbsp;&nbsp;<img class="marquee__sep" src="assets/images/furniture/x.png" alt="">&nbsp;&nbsp; Chilaquiles &nbsp;&nbsp;<img class="marquee__sep" src="assets/images/furniture/x.png" alt="">&nbsp;&nbsp; Vietnamese Coffee &nbsp;&nbsp;<img class="marquee__sep" src="assets/images/furniture/x.png" alt="">&nbsp;&nbsp; Vibes &nbsp;&nbsp;<img class="marquee__sep" src="assets/images/furniture/x.png" alt="">&nbsp;&nbsp; </span>
+            <span class="marquee__track" aria-hidden="true">Savy B Spritz &nbsp;&nbsp;<img class="marquee__sep" src="assets/images/furniture/x.png" alt="">&nbsp;&nbsp; Tacos &nbsp;&nbsp;<img class="marquee__sep" src="assets/images/furniture/x.png" alt="">&nbsp;&nbsp; Corn Sazerac &nbsp;&nbsp;<img class="marquee__sep" src="assets/images/furniture/x.png" alt="">&nbsp;&nbsp; Chilaquiles &nbsp;&nbsp;<img class="marquee__sep" src="assets/images/furniture/x.png" alt="">&nbsp;&nbsp; Vietnamese Coffee &nbsp;&nbsp;<img class="marquee__sep" src="assets/images/furniture/x.png" alt="">&nbsp;&nbsp; Vibes &nbsp;&nbsp;<img class="marquee__sep" src="assets/images/furniture/x.png" alt="">&nbsp;&nbsp; </span>
+          </div>
+        </div>
+        <div class="food__item-label stamp">
+          Potato &amp; Chorizo
+        </div>
+      </div>
+
+      <!-- Two column split -->
+      <div class="food__item food__item--half">
+        <img src="assets/images/food/IMG_3431.jpg"
+             alt="Tacos"
+             loading="lazy">
+      </div>
+      <div class="food__item food__item--half food__item--text">
+        <div class="food__quote">
+          <p class="headline">"More depth than a Seamus Heaney poem."</p>
+          <cite class="stamp">Meat &amp; One Veg</cite>
+        </div>
+      </div>
+
+      <!-- Desktop gap filler — 3rd column in the half row -->
+      <div class="food__item food__item--half food__item--gap">
+        <img src="assets/images/furniture/IMG_3458.jpg" alt="" loading="lazy">
+      </div>
+
+      <!-- Three across -->
+      <div class="food__item food__item--third">
+        <img src="assets/images/food/IMG_3441.jpg"
+             alt="Mussels"
+             loading="lazy">
+      </div>
+      <div class="food__item food__item--third">
+        <img src="assets/images/food/IMG_3442.jpg"
+             alt="Mussels with sauce"
+             loading="lazy">
+      </div>
+      <div class="food__item food__item--third">
+        <img src="assets/images/food/IMG_3443.jpg"
+             alt="Cheesecake"
+             loading="lazy">
+      </div>
+
+      <!-- Full width with overlay text -->
+      <div class="food__item food__item--full food__item--overlay">
+        <img src="assets/images/food/IMG_3432.jpg"
+             alt="Food being served"
+             loading="lazy">
+        <div class="food__overlay-text headline">
+          Not just tacos.
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Taco illustration -->
+    <div class="food__taco-sprite"></div>
+
+  </section>
+
+  <div class="section-break"></div>
+
+  <section class="menu" id="menu">
+
+    <div class="menu__texture"></div>
+    <div class="menu__skeleton"></div>
+
+    <div class="menu__inner">
+
+      <div class="menu__header">
+        <span class="stamp menu__label">The Menu</span>
+        <h2 class="headline menu__headline">
+          <span>Seasonal.</span>
+          <span>Local.</span>
+          <span class="display menu__sub">No apologies.</span>
+        </h2>
+      </div>
+
+      <div class="section-barb"></div>
+
+      <div class="menu__body">
+        <p class="menu__copy">
+          We cook what's good. The menu shifts with the
+          season, the supplier, and what we feel like making.
+          No fixed dishes. No apologies.
+          Download the latest below — or come in and trust us.
+        </p>
+        <div class="menu__actions" id="menuActions">
+          <a id="menuDownload"
+             href="menu/current/menu.pdf"
+             download
+             class="btn btn--primary">
+            Download Menu
+          </a>
+          <span class="stamp menu__pdf-updated" id="menuUpdated"></span>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+  <section class="drinks" id="drinks">
+
+    <!-- Background texture -->
+    <div class="drinks__texture"></div>
+
+    <!-- Saint dog illustration — faded background -->
+    <div class="drinks__saint"></div>
+
+    <div class="drinks__inner">
+
+      <div class="drinks__header">
+        <span class="stamp drinks__label">Drinks</span>
+        <h2 class="headline drinks__headline">
+          <span>Great drinks.</span>
+          <span class="display drinks__sub">Full stop.</span>
+        </h2>
+      </div>
+
+      <!-- Barb divider -->
+      <div class="section-barb section-barb--light"></div>
+
+      <!-- Drinks list — styled like a poster -->
+      <div class="drinks__list">
+
+        <div class="drinks__item">
+          <span class="drinks__name headline">Breton Cidre</span>
+          <span class="drinks__dots"></span>
+          <span class="drinks__type stamp">Cider</span>
+        </div>
+
+        <div class="drinks__item">
+          <span class="drinks__name headline">Corn Sazerac</span>
+          <span class="drinks__dots"></span>
+          <span class="drinks__type stamp">Cocktail</span>
+        </div>
+
+        <div class="drinks__item">
+          <span class="drinks__name headline">Ferrari</span>
+          <span class="drinks__dots"></span>
+          <span class="drinks__type stamp">Campari &amp; Fernet</span>
+        </div>
+
+        <div class="drinks__item">
+          <span class="drinks__name headline">Jarritos</span>
+          <span class="drinks__dots"></span>
+          <span class="drinks__type stamp">Soft</span>
+        </div>
+
+        <div class="drinks__item">
+          <span class="drinks__name headline">Vietnamese Coffee</span>
+          <span class="drinks__dots"></span>
+          <span class="drinks__type stamp">Coffee</span>
+        </div>
+
+        <div class="drinks__item">
+          <span class="drinks__name headline">Modelo</span>
+          <span class="drinks__dots"></span>
+          <span class="drinks__type stamp">Beer</span>
+        </div>
+
+      </div>
+
+      <!-- Beer gif — centred, animated -->
+      <div class="drinks__gif">
+        <img src="assets/images/food/beer.gif"
+             alt="Cold beer"
+             loading="lazy">
+        <p class="stamp drinks__gif-label">
+          1800 — Late
+        </p>
+      </div>
+
+      <!-- Drinks quote -->
+      <blockquote class="drinks__quote">
+        <p class="headline">
+          "The food at Perro is excellent."
+        </p>
+        <cite class="stamp">Rebecca Nicholson — The Observer Food Monthly</cite>
+      </blockquote>
+
+      <!-- Crosshair sprite -->
+      <div class="sprite sprite--crosshair-drinks"></div>
+
+      <!-- X marks -->
+      <div class="sprite sprite--xxx-drinks"></div>
+
+    </div>
+
+  </section>
+
+  <section class="reviews" id="reviews">
+
+    <!-- Background elements -->
+    <div class="reviews__bg-dog"></div>
+    <div class="reviews__texture"></div>
+
+    <!-- Skeleton sprite bottom left -->
+    <div class="reviews__skeleton"></div>
+
+    <!-- Oyster sprite top right -->
+    <div class="reviews__oyster"></div>
+
+    <!-- Section header -->
+    <div class="reviews__header">
+      <div class="section-barb"></div>
+      <span class="stamp reviews__label">Press</span>
+      <h2 class="headline reviews__headline">
+        They said it.<br>We didn't.
+      </h2>
+      <div class="section-barb"></div>
+    </div>
+
+    <!-- Reviews grid -->
+    <div class="reviews__grid">
+
+      <!-- Time Out — full width opener -->
+      <article class="review review--full review--dark">
+        <div class="review__furniture review__furniture--barb"></div>
+        <span class="review__pub stamp">Time Out</span>
+        <blockquote class="review__quote headline">
+          "Honestly? One of everything."
+        </blockquote>
+        <p class="review__secondary">
+          "No frills, few tables, shoulder-to-shoulder
+          and practically in the kitchen."
+        </p>
+        <cite class="review__cite stamp">
+          Lauren Potts — Local Expert, Birmingham — September 2025
+        </cite>
+        <div class="review__rating display">★★★★★</div>
+      </article>
+
+      <!-- Observer — half width -->
+      <article class="review review--half review--green">
+        <span class="review__pub stamp">The Observer Food Monthly</span>
+        <blockquote class="review__quote headline">
+          "The food at Perro is excellent."
+        </blockquote>
+        <p class="review__secondary">
+          "That atmosphere made it an extra special treat."
+        </p>
+        <cite class="review__cite stamp">
+          Rebecca Nicholson — November 2025
+        </cite>
+        <div class="review__furniture review__furniture--sin"></div>
+      </article>
+
+      <!-- Sneaky Diner — half width -->
+      <article class="review review--half review--accent">
+        <span class="review__pub stamp">Sneaky Diner</span>
+        <blockquote class="review__quote headline">
+          "HIGHLY RECOMMENDED."
+        </blockquote>
+        <p class="review__secondary">
+          "I loved it — we all did."
+        </p>
+        <cite class="review__cite stamp">Sneaky Diner</cite>
+        <div class="review__furniture review__furniture--chain"></div>
+      </article>
+
+      <!-- Meat & One Veg — full width closer -->
+      <article class="review review--full review--ink">
+        <div class="review__inner">
+          <div class="review__text">
+            <span class="review__pub stamp">Meat &amp; One Veg</span>
+            <blockquote class="review__quote headline">
+              "Perro is fucking great."
+            </blockquote>
+            <p class="review__secondary">
+              "It's just effortless. Cooking the stuff they love,
+              that they are influenced by and want to eat themselves."
+            </p>
+            <cite class="review__cite stamp">
+              10/10 — July 2025
+            </cite>
+          </div>
+          <div class="review__score display">
+            10<span>/10</span>
+          </div>
+        </div>
+        <div class="review__furniture review__furniture--barb-bottom"></div>
+      </article>
+
+    </div>
+
+  </section>
+
+  <section class="player" id="player">
+
+    <div class="player__texture"></div>
+
+    <div class="player__inner">
+
+      <!-- Left — turntable -->
+      <div class="player__deck-wrap">
+
+        <div class="player__header">
+          <span class="stamp player__label">Now Playing</span>
+          <h2 class="headline player__headline">
+            <span class="player__line-top">We eat to</span>
+            <span class="player__music-row">
+              <span class="display player__sub">music.</span>
+              <button class="player__play-btn"
+                      id="playerBtn"
+                      aria-label="Play music">
+                <span id="playerIcon">▶</span>
+              </button>
+            </span>
+          </h2>
+        </div>
+
+        <!-- Turntable -->
+        <div class="deck" id="playerDeck">
+
+          <div class="deck__layers">
+
+            <img class="deck__layer deck__base"
+              src="assets/images/turntable/1_base.png"
+              alt=""
+              loading="lazy">
+
+            <img class="deck__layer deck__record"
+              id="deckRecord"
+              src="assets/images/turntable/2record.png"
+              alt=""
+              loading="lazy">
+
+            <img class="deck__layer deck__pitch"
+              src="assets/images/turntable/4pitch.png"
+              alt=""
+              loading="lazy">
+
+            <img class="deck__layer deck__top"
+              src="assets/images/turntable/5-top-part.png"
+              alt=""
+              loading="lazy">
+
+            <img class="deck__layer deck__tonearm"
+              id="deckTonearm"
+              src="assets/images/turntable/3tonearm.png"
+              alt=""
+              loading="lazy">
+
+          </div>
+
+        </div>
+
+        <!-- Audio element -->
+        <audio id="playerAudio" loop>
+          <source src="assets/audio/Main-Full.mp3" type="audio/mpeg">
+        </audio>
+
+      </div>
+
+      <!-- Right — what we're playing -->
+      <div class="player__records">
+
+        <span class="stamp player__records-label">What's on the deck</span>
+
+        <div class="player__album-list">
+
+          <div class="player__album">
+            <div class="player__album-art">
+              <div class="player__vinyl"></div>
+              <span class="player__album-num stamp">01</span>
+            </div>
+            <div class="player__album-info">
+              <p class="player__album-title headline">Madvillainy</p>
+              <p class="player__album-artist stamp">Madvillain</p>
+            </div>
+          </div>
+
+          <div class="player__album">
+            <div class="player__album-art">
+              <div class="player__vinyl"></div>
+              <span class="player__album-num stamp">02</span>
+            </div>
+            <div class="player__album-info">
+              <p class="player__album-title headline">Illmatic</p>
+              <p class="player__album-artist stamp">Nas</p>
+            </div>
+          </div>
+
+          <div class="player__album">
+            <div class="player__album-art">
+              <div class="player__vinyl"></div>
+              <span class="player__album-num stamp">03</span>
+            </div>
+            <div class="player__album-info">
+              <p class="player__album-title headline">Enter The Wu-Tang</p>
+              <p class="player__album-artist stamp">Wu-Tang Clan</p>
+            </div>
+          </div>
+
+          <div class="player__album">
+            <div class="player__album-art">
+              <div class="player__vinyl"></div>
+              <span class="player__album-num stamp">04</span>
+            </div>
+            <div class="player__album-info">
+              <p class="player__album-title headline">Midnight Marauders</p>
+              <p class="player__album-artist stamp">A Tribe Called Quest</p>
+            </div>
+          </div>
+
+          <div class="player__album">
+            <div class="player__album-art">
+              <div class="player__vinyl"></div>
+              <span class="player__album-num stamp">05</span>
+            </div>
+            <div class="player__album-info">
+              <p class="player__album-title headline">The Miseducation</p>
+              <p class="player__album-artist stamp">Lauryn Hill</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ===== FIND US ===== -->
+
+  <section class="find-us" id="find-us">
+
+    <div class="find-us__texture"></div>
+    <div class="find-us__dog"></div>
+
+    <div class="find-us__inner">
+
+      <div class="find-us__header">
+        <span class="stamp find-us__label">Find Us</span>
+        <h2 class="headline find-us__headline">
+          <span>Kings</span>
+          <span class="display find-us__sub">Heath.</span>
+        </h2>
+      </div>
+
+      <div class="section-barb"></div>
+
+      <div class="find-us__content">
+
+        <div class="find-us__address">
+
+          <div class="find-us__address-block">
+            <span class="stamp find-us__address-label">Address</span>
+            <address class="find-us__address-text headline">
+              Unit 2<br>
+              Kings Court<br>
+              High Street<br>
+              Kings Heath<br>
+              B14 7JZ
+            </address>
+          </div>
+
+          <div class="find-us__hours-block">
+            <span class="stamp find-us__address-label">Opening Hours</span>
+            <div class="find-us__hours">
+              <div class="find-us__hours-row">
+                <span class="stamp">Mon</span>
+                <span class="find-us__hours-dots"></span>
+                <span class="stamp find-us__closed">Closed</span>
+              </div>
+              <div class="find-us__hours-row">
+                <span class="stamp">Tue</span>
+                <span class="find-us__hours-dots"></span>
+                <span class="stamp find-us__closed">Closed</span>
+              </div>
+              <div class="find-us__hours-row">
+                <span class="stamp">Wed</span>
+                <span class="find-us__hours-dots"></span>
+                <span class="stamp">1800 — Late</span>
+              </div>
+              <div class="find-us__hours-row">
+                <span class="stamp">Thu</span>
+                <span class="find-us__hours-dots"></span>
+                <span class="stamp">1800 — Late</span>
+              </div>
+              <div class="find-us__hours-row">
+                <span class="stamp">Fri</span>
+                <span class="find-us__hours-dots"></span>
+                <span class="stamp">1800 — Late</span>
+              </div>
+              <div class="find-us__hours-row find-us__hours-row--highlight">
+                <span class="stamp">Sat</span>
+                <span class="find-us__hours-dots"></span>
+                <span class="stamp">1200 — Late</span>
+              </div>
+              <div class="find-us__hours-row find-us__hours-row--highlight">
+                <span class="stamp">Sun</span>
+                <span class="find-us__hours-dots"></span>
+                <span class="stamp">1200 — Late</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="find-us__map">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2431.5!2d-1.8892!3d52.4198!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNTLCsDI1JzExLjMiTiAxwrA1Myc0MS4xIlc!5e0!3m2!1sen!2suk!4v1234567890"
+            width="100%"
+            height="100%"
+            style="border:0;"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title="Perro location">
+          </iframe>
+          <div class="find-us__map-label stamp">Unit 2 Kings Court — B14 7JZ</div>
+        </div>
+
+      </div>
+
+      <div class="find-us__transport">
+        <div class="section-barb"></div>
+        <div class="find-us__transport-inner">
+          <div class="find-us__transport-item">
+            <span class="stamp find-us__transport-label">By Bus</span>
+            <p>35, 45, 47 stop on High Street</p>
+          </div>
+          <div class="find-us__transport-item">
+            <span class="stamp find-us__transport-label">By Train</span>
+            <p>Kings Heath is a 10 min walk from Moseley</p>
+          </div>
+          <div class="find-us__transport-item">
+            <span class="stamp find-us__transport-label">Parking</span>
+            <p>Street parking on High Street after 6pm</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ===== BOOKING ===== -->
+
+  <section class="booking" id="book">
+
+    <div class="booking__texture"></div>
+    <div class="booking__saint"></div>
+
+    <div class="booking__inner">
+
+      <div class="booking__header">
+        <span class="stamp booking__label">Reservations</span>
+        <h2 class="headline booking__headline">
+          <span>Book a</span>
+          <span class="display booking__sub">table.</span>
+        </h2>
+      </div>
+
+      <div class="section-barb section-barb--light"></div>
+
+      <div class="booking__options">
+
+        <div class="booking__option">
+          <span class="stamp booking__option-label">Online</span>
+          <p class="booking__option-text">Book instantly via our reservations system.</p>
+          <a href="https://www.opentable.co.uk"
+             target="_blank"
+             rel="noopener"
+             class="btn btn--primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm-7 3a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm6 13H6v-.5c0-2 4-3.1 6-3.1s6 1.1 6 3.1V19z"/></svg>
+            Book Online
+          </a>
+        </div>
+
+        <div class="booking__divider stamp">or</div>
+
+        <div class="booking__option">
+          <span class="stamp booking__option-label">By Phone</span>
+          <p class="booking__option-text">Call us direct. We don't bite.</p>
+          <a href="tel:+441214000000" class="btn btn--ghost">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+            Call Us
+          </a>
+        </div>
+
+        <div class="booking__divider stamp">or</div>
+
+        <div class="booking__option">
+          <span class="stamp booking__option-label">Instagram</span>
+          <p class="booking__option-text">DM us. We're on there anyway.</p>
+          <a href="https://instagram.com/perro"
+             target="_blank"
+             rel="noopener"
+             class="btn btn--ghost">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="3.5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+            @taqueria_el_perro
+          </a>
+        </div>
+
+      </div>
+
+      <div class="booking__walkins">
+        <div class="section-barb section-barb--light"></div>
+        <p class="headline booking__walkins-text">Walk ins always welcome.</p>
+        <p class="stamp booking__walkins-sub">We'll fit you in.</p>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+
+  <footer class="footer">
+
+    <div class="footer__barb"></div>
+
+    <div class="footer__inner">
+
+      <div class="footer__logo">
+        <img src="assets/images/logo.png" alt="Perro" loading="lazy">
+      </div>
+
+      <div class="footer__cols">
+
+        <div class="footer__col">
+          <span class="stamp footer__col-title">Perro</span>
+          <p>Unit 2 Kings Court</p>
+          <p>High Street</p>
+          <p>Kings Heath</p>
+          <p>B14 7JZ</p>
+        </div>
+
+        <div class="footer__col">
+          <span class="stamp footer__col-title">Hours</span>
+          <p>Wed–Fri: 1800–Late</p>
+          <p>Sat–Sun: 1200–Late</p>
+          <p>Mon–Tue: Closed</p>
+        </div>
+
+        <div class="footer__col">
+          <span class="stamp footer__col-title">Follow</span>
+          <a href="https://instagram.com/perro" target="_blank" rel="noopener">Instagram</a>
+          <a href="#book">Book a Table</a>
+          <a href="#menu">Menu</a>
+          <a href="admin.html">Admin</a>
+        </div>
+
+      </div>
+
+      <div class="footer__bottom">
+        <div class="footer__barb-bottom"></div>
+        <p class="stamp footer__credit">Taqueria El Perro — Kings Heath — Est. 2025</p>
+        <p class="footer__legal">© 2025 Perro. All rights reserved.</p>
+      </div>
+
+    </div>
+
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script src="js/record-player.js"></script>
+  <script src="js/menu-upload.js"></script>
+</body>
+</html>

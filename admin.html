@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perro — Admin</title>
+  <link rel="stylesheet" href="css/fonts.css">
+  <style>
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Barlow Condensed', sans-serif;
+      background: #191919;
+      color: #C8EC66;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .admin {
+      width: 100%;
+      max-width: 480px;
+    }
+
+    .admin__logo {
+      width: 140px;
+      margin-bottom: 2rem;
+      filter: invert(1);
+      opacity: 0.8;
+    }
+
+    .admin__title {
+      font-size: 2rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+    }
+
+    .admin__sub {
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      opacity: 0.4;
+      margin-bottom: 2rem;
+    }
+
+    .admin__field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .admin__label {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      opacity: 0.5;
+    }
+
+    .admin__input {
+      background: transparent;
+      border: 1px solid rgba(200,236,102,0.3);
+      color: #C8EC66;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1rem;
+      padding: 0.75rem 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .admin__input:focus {
+      border-color: #C8EC66;
+    }
+
+    .admin__input[type="file"] {
+      padding: 0.5rem;
+      cursor: pointer;
+    }
+
+    .admin__btn {
+      width: 100%;
+      background: #C8EC66;
+      color: #191919;
+      border: none;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      padding: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .admin__btn:hover {
+      background: #D25D27;
+      color: #fff;
+    }
+
+    .admin__status {
+      margin-top: 1rem;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      min-height: 1.5rem;
+      opacity: 0.7;
+    }
+
+    .admin__status--success { color: #C8EC66; }
+    .admin__status--error   { color: #D25D27; }
+
+    #adminLogin { display: block; }
+    #adminPanel { display: none; }
+
+    .admin__current {
+      border: 1px solid rgba(200,236,102,0.2);
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      opacity: 0.6;
+    }
+
+    .admin__divider {
+      border: none;
+      border-top: 1px solid rgba(200,236,102,0.15);
+      margin: 2rem 0;
+    }
+
+    .admin__back {
+      display: inline-block;
+      margin-top: 1.5rem;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #C8EC66;
+      opacity: 0.4;
+      text-decoration: none;
+    }
+
+    .admin__back:hover { opacity: 0.8; }
+
+  </style>
+</head>
+<body>
+
+<div class="admin">
+
+  <img class="admin__logo" src="assets/images/logo.png" alt="Perro">
+
+  <!-- LOGIN SCREEN -->
+  <div id="adminLogin">
+    <h1 class="admin__title">Admin</h1>
+    <p class="admin__sub">Perro — Menu Management</p>
+
+    <div class="admin__field">
+      <label class="admin__label" for="adminPassword">Password</label>
+      <input class="admin__input"
+             type="password"
+             id="adminPassword"
+             placeholder="Enter password"
+             autocomplete="current-password">
+    </div>
+
+    <button class="admin__btn" id="loginBtn">Login</button>
+
+    <p class="admin__status" id="loginStatus"></p>
+  </div>
+
+  <!-- ADMIN PANEL -->
+  <div id="adminPanel">
+    <h1 class="admin__title">Menu Upload</h1>
+    <p class="admin__sub">Upload a new menu PDF</p>
+
+    <div class="admin__current" id="currentMenuInfo">
+      Checking current menu...
+    </div>
+
+    <hr class="admin__divider">
+
+    <div class="admin__field">
+      <label class="admin__label" for="menuFile">Select menu PDF</label>
+      <input class="admin__input"
+             type="file"
+             id="menuFile"
+             accept=".pdf">
+    </div>
+
+    <button class="admin__btn" id="uploadBtn">Upload Menu</button>
+
+    <p class="admin__status" id="uploadStatus"></p>
+
+    <hr class="admin__divider">
+
+    <button class="admin__btn"
+            id="removeBtn"
+            style="background:transparent; color:#D25D27; border:1px solid #D25D27;">
+      Remove Current Menu
+    </button>
+
+    <a href="index.html" class="admin__back">← Back to site</a>
+  </div>
+
+</div>
+
+<script>
+/* ----------------------------------------
+   ADMIN — simple client-side password gate
+   Change ADMIN_PASSWORD below
+   ---------------------------------------- */
+
+const ADMIN_PASSWORD = 'perro2025';
+
+document.getElementById('loginBtn').addEventListener('click', () => {
+  const pw     = document.getElementById('adminPassword').value;
+  const status = document.getElementById('loginStatus');
+
+  if (pw === ADMIN_PASSWORD) {
+    document.getElementById('adminLogin').style.display = 'none';
+    document.getElementById('adminPanel').style.display = 'block';
+    checkCurrentMenu();
+  } else {
+    status.textContent = 'Incorrect password.';
+    status.className   = 'admin__status admin__status--error';
+  }
+});
+
+document.getElementById('adminPassword').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') document.getElementById('loginBtn').click();
+});
+
+async function checkCurrentMenu() {
+  const info = document.getElementById('currentMenuInfo');
+  try {
+    const res      = await fetch('menu/current/manifest.json', { cache: 'no-cache' });
+    const manifest = await res.json();
+    if (manifest.filename) {
+      const date = new Date(manifest.updated).toLocaleDateString('en-GB');
+      info.textContent = 'Current menu: ' + manifest.filename + ' — uploaded ' + date;
+    } else {
+      info.textContent = 'No menu currently uploaded.';
+    }
+  } catch {
+    info.textContent = 'No menu currently uploaded.';
+  }
+}
+
+document.getElementById('uploadBtn').addEventListener('click', async () => {
+  const fileInput = document.getElementById('menuFile');
+  const status    = document.getElementById('uploadStatus');
+
+  if (!fileInput.files.length) {
+    status.textContent = 'Please select a PDF file.';
+    status.className   = 'admin__status admin__status--error';
+    return;
+  }
+
+  const file = fileInput.files[0];
+
+  if (file.type !== 'application/pdf') {
+    status.textContent = 'Please select a PDF file.';
+    status.className   = 'admin__status admin__status--error';
+    return;
+  }
+
+  status.textContent = 'Uploading...';
+  status.className   = 'admin__status';
+
+  const formData = new FormData();
+  formData.append('menu', file);
+
+  try {
+    /*
+      BACKEND ENDPOINT — replace URL with Node/Express upload route.
+      Build this in the next prompt.
+    */
+    const res = await fetch('/api/upload-menu', { method: 'POST', body: formData });
+
+    if (res.ok) {
+      status.textContent = 'Menu uploaded successfully.';
+      status.className   = 'admin__status admin__status--success';
+      checkCurrentMenu();
+    } else {
+      throw new Error('Upload failed');
+    }
+  } catch (err) {
+    status.textContent = 'Upload failed. Is the server running?';
+    status.className   = 'admin__status admin__status--error';
+  }
+});
+
+document.getElementById('removeBtn').addEventListener('click', async () => {
+  if (!confirm('Remove the current menu from the site?')) return;
+
+  const status = document.getElementById('uploadStatus');
+
+  try {
+    const res = await fetch('/api/remove-menu', { method: 'POST' });
+    if (res.ok) {
+      status.textContent = 'Menu removed.';
+      status.className   = 'admin__status admin__status--success';
+      checkCurrentMenu();
+    } else {
+      throw new Error('Remove failed');
+    }
+  } catch (err) {
+    status.textContent = 'Remove failed. Is the server running?';
+    status.className   = 'admin__status admin__status--error';
+  }
+});
+</script>
+
+</body>
+</html>
