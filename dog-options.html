@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Perro — Dog studies</title>
+  <link rel="stylesheet" href="css/home.css">
+  <style>
+    body { margin:0; background:var(--color-bg); color:var(--color-fg); }
+    main { max-width:1500px; margin:auto; padding:44px 32px; }
+    .intro { display:flex; align-items:baseline; justify-content:space-between; gap:24px; border-bottom:1px solid currentColor; padding-bottom:20px; }
+    h1 { font:inherit; font-size:18px; margin:0; }
+    .intro p { margin:0; font-size:11px; }
+    .options { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); margin-top:36px; }
+    figure { margin:0; padding:0 22px 28px; }
+    figure + figure { border-left:1px dotted currentColor; }
+    .art { width:100%; aspect-ratio:500/420; background:var(--color-fg); mask:var(--art) center/contain no-repeat; -webkit-mask:var(--art) center/contain no-repeat; }
+    h2 { font:inherit; font-size:14px; margin:32px 0 10px; }
+    figcaption p { font-size:11px; margin:0 0 24px; }
+    a { color:inherit; font-size:11px; text-decoration:underline; text-underline-offset:5px; }
+    .note { border-top:1px solid currentColor; padding-top:20px; font-size:11px; margin-top:22px; }
+    @media(max-width:680px) { main { padding:25px 18px; } .intro { display:block; } .intro p { margin-top:12px; } .options { grid-template-columns:1fr; } figure + figure { border-left:0; border-top:1px dotted currentColor; padding-top:24px; } }
+  </style>
+</head>
+<body>
+  <main class="is-loaded">
+    <div class="intro"><h1>PERRO / DOG STUDIES</h1><p>THREE ORIGINAL CUT-BLOCK ILLUSTRATIONS</p></div>
+    <div class="options">
+      <figure>
+        <div class="art" role="img" aria-label="Compact dog in profile, leaning into a wide snarl" style="--art:url('assets/images/dog-options/option-1.svg')"></div>
+        <figcaption><h2>OPTION 1</h2><p>SIDE-ON SNARL</p><a href="assets/images/dog-options/option-1.svg" download>Download SVG</a></figcaption>
+      </figure>
+      <figure>
+        <div class="art" role="img" aria-label="Low crouching dog with bent legs and an oversized open jaw" style="--art:url('assets/images/dog-options/option-2.svg')"></div>
+        <figcaption><h2>OPTION 2</h2><p>CROUCHED / READY TO POUNCE</p><a href="assets/images/dog-options/option-2.svg" download>Download SVG</a></figcaption>
+      </figure>
+      <figure>
+        <div class="art" role="img" aria-label="Primitive dog facing forward with a huge snarling head and small body" style="--art:url('assets/images/dog-options/option-3.svg')"></div>
+        <figcaption><h2>OPTION 3</h2><p>FRONT / THREE-QUARTER ATTACK</p><a href="assets/images/dog-options/option-3.svg" download>Download SVG</a></figcaption>
+      </figure>
+    </div>
+    <p class="note">ONE INK. UNEVEN CUTS. THREE BAD ATTITUDES.</p>
+  </main>
+</body>
+</html>

@@ -1,0 +1,31 @@
+/* FAQ-only presentation; the shared homepage identity remains in home.css. */
+.page-faq .faq-intro { margin: 8px 0 58px; }
+.page-faq .faq-kicker { margin: 0; font-size: clamp(17px, 1.9vw, 25px); line-height: 1.2; }
+.page-faq .faq-intro-copy { margin: 20px 0 0; max-width: 38ch; opacity: .58; font-size: 13px; }
+.faq-list { border-top: 1px dotted var(--color-fg); }
+.faq-item { border-bottom: 1px dotted var(--color-fg); }
+.faq-question { margin: 0; }
+.faq-question button { display: grid; grid-template-columns: 2.5rem minmax(0, 1fr) 1.5rem; gap: 18px; align-items: center; width: 100%; min-height: 82px; padding: 19px 0; border: 0; background: transparent; color: var(--color-fg); text-align: left; cursor: pointer; transition: opacity 180ms ease, transform 280ms cubic-bezier(.22,1,.36,1); }
+.faq-question button:hover { opacity: .72; transform: translateX(4px); }
+.faq-question button:focus-visible { outline: 2px solid currentColor; outline-offset: 5px; }
+.faq-number { opacity: .52; font-size: 12px; }
+.faq-label { font: inherit; font-size: clamp(14px, 1.5vw, 20px); line-height: 1.35; }
+.faq-mark { position: relative; display: block; width: 16px; height: 16px; justify-self: end; }
+.faq-mark::before, .faq-mark::after { content: ""; position: absolute; top: 7px; left: 0; width: 16px; height: 1px; background: currentColor; transition: transform 360ms cubic-bezier(.22,1,.36,1); }
+.faq-mark::after { transform: rotate(90deg); }
+.faq-item.is-open .faq-mark::after { transform: rotate(0deg); }
+.faq-answer { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows 420ms cubic-bezier(.22,1,.36,1), opacity 260ms ease; }
+.faq-answer-inner { min-height: 0; overflow: hidden; padding-left: calc(2.5rem + 18px); }
+.faq-answer p { max-width: 62ch; margin: 0 0 22px; font-size: 13px; line-height: 1.75; }
+.faq-item.is-open .faq-answer { grid-template-rows: 1fr; opacity: 1; }
+.faq-item.is-open .faq-answer[hidden] { display: grid; }
+@media (max-width: 767.98px) {
+  .page-faq .faq-intro { margin-bottom: 38px; }
+  .faq-question button { grid-template-columns: 2rem minmax(0, 1fr) 1.25rem; gap: 12px; min-height: 74px; padding: 17px 0; }
+  .faq-label { font-size: 14px; }
+  .faq-answer-inner { padding-left: calc(2rem + 12px); }
+  .faq-answer p { font-size: 12px; line-height: 1.7; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .faq-question button, .faq-mark::before, .faq-mark::after, .faq-answer { transition: none; }
+}

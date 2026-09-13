@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Home - Perro</title>
+  <meta name="description" content="PERRO is a gastro-cantina where sharing plates combine traditional Mexican ingredients and techniques with a contemporary approach" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Home - Perro" />
+  <meta property="og:description" content="PERRO is a gastro-cantina where sharing plates combine traditional Mexican ingredients and techniques with a contemporary approach" />
+  <meta property="og:site_name" content="Perro" />
+  <link rel="icon" href="assets/images/logo.png" type="image/png">
+  <link rel="stylesheet" href="css/home.css">
+  <script>
+    try {
+      if (localStorage.getItem('perro-theme') === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    } catch (e) {}
+  </script>
+</head>
+
+<body class="home no-js">
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <filter id="logo-ripple-filter" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB">
+    <feImage id="logo-wave-map" x="-15%" y="-15%" width="130%" height="130%" preserveAspectRatio="none" result="wave" />
+    <feDisplacementMap id="logo-ripple-displace" in="SourceGraphic" in2="wave" scale="0" xChannelSelector="R" yChannelSelector="G" />
+  </filter>
+</svg>
+
+<div class="theme-transition-overlay" aria-hidden="true"></div>
+
+<div class="loader-component">
+  <div class="loader-image"></div>
+</div>
+
+<header class="">
+
+<div class="container-fluid px-30">
+  <div class="row justify-content-center d-none d-md-flex">
+    <div class="col-lg-10">
+      <nav class="navbar">
+        <ul class="nav-container">
+
+          <li class="nav-item">
+            <a href="menu.html" class="nav-link ch-txt" target="_self">
+              ( Menu )
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="https://booking.resdiary.com/widget/Standard/Perro/62717?utm_source=ig&amp;utm_medium=social&amp;utm_content=link_in_bio&amp;fbclid=PAcGRvZgJleHRuA2FlbQIxMQBzcnRjBmFwcF9pZA85MzY2MTk3NDMzOTI0NTkAAadMfv6LZvqKgCAAJj1WRfeI-OoyWoDMJLTXB_LsNaTdyxFVPye0tW4mMnxuGg_aem_HV9KHA7Fn1s6rLRen4JtEA&amp;utm_id=97760_v0_s00_e0_tv3" class="nav-link ch-txt" target="_blank" rel="noopener">
+              ( Booking )
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="faq.html" class="nav-link ch-txt" target="_self">
+              ( FAQ )
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="https://www.google.com/maps/place/Perro/@52.4333654,-1.8982269,16z/data=!4m10!1m2!2m1!1sUnit+2+Kings+Court,+High+Street,+Kings+Heath,+Birmingham+B14+7JZ!3m6!1s0x4870bd4d0a9d3355:0x411e44e5193675cf!8m2!3d52.4352009!4d-1.8930399!15sCkBVbml0IDIgS2luZ3MgQ291cnQsIEhpZ2ggU3RyZWV0LCBLaW5ncyBIZWF0aCwgQmlybWluZ2hhbSBCMTQgN0paWj8iPXVuaXQgMiBraW5ncyBjb3VydCBoaWdoIHN0cmVldCBraW5ncyBoZWF0aCBiaXJtaW5naGFtIGIxNCA3anqSARJtZXhpY2FuX3Jlc3RhdXJhbnTgAQA!16s%2Fg%2F11xklgwmsv?entry=ttu&amp;g_ep=EgoyMDI2MDkwOS4wIKXMDSoASAFQAw%3D%3D" class="nav-link ch-txt" target="_blank">
+              ( Location )
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+  <div class="d-flex justify-content-center position-relative">
+    <button type="button" class="menu-dots-btn d-md-none" id="abrir-menu" aria-label="Open menu" aria-expanded="false" aria-controls="submenu" data-toggle="show" data-target="#submenu, header, .submenu-toggle, #abrir-menu">
+      <span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span>
+    </button>
+    <div class="submenu" id="submenu">
+      <div class="d-flex flex-column align-items-center gap-1 pt-15 pb-15">
+
+        <a href="menu.html" target="_self">( Menu )</a>
+
+        <a href="https://booking.resdiary.com/widget/Standard/Perro/62717?utm_source=ig&amp;utm_medium=social&amp;utm_content=link_in_bio&amp;fbclid=PAcGRvZgJleHRuA2FlbQIxMQBzcnRjBmFwcF9pZA85MzY2MTk3NDMzOTI0NTkAAadMfv6LZvqKgCAAJj1WRfeI-OoyWoDMJLTXB_LsNaTdyxFVPye0tW4mMnxuGg_aem_HV9KHA7Fn1s6rLRen4JtEA&amp;utm_id=97760_v0_s00_e0_tv3" target="_blank" rel="noopener">( Booking )</a>
+
+        <a href="faq.html" target="_self">( FAQ )</a>
+
+        <a href="https://www.google.com/maps/place/Perro/@52.4333654,-1.8982269,16z/data=!4m10!1m2!2m1!1sUnit+2+Kings+Court,+High+Street,+Kings+Heath,+Birmingham+B14+7JZ!3m6!1s0x4870bd4d0a9d3355:0x411e44e5193675cf!8m2!3d52.4352009!4d-1.8930399!15sCkBVbml0IDIgS2luZ3MgQ291cnQsIEhpZ2ggU3RyZWV0LCBLaW5ncyBIZWF0aCwgQmlybWluZ2hhbSBCMTQgN0paWj8iPXVuaXQgMiBraW5ncyBjb3VydCBoaWdoIHN0cmVldCBraW5ncyBoZWF0aCBiaXJtaW5naGFtIGIxNCA3anqSARJtZXhpY2FuX3Jlc3RhdXJhbnTgAQA!16s%2Fg%2F11xklgwmsv?entry=ttu&amp;g_ep=EgoyMDI2MDkwOS4wIKXMDSoASAFQAw%3D%3D" target="_blank">( Location )</a>
+
+        <div class="header-social pt-15">
+          ( <a target="_blank" class="ch-txt" href="https://www.instagram.com/taqueria_el_perro/">IG</a> )
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+<div class="submenu-toggle" data-target="#submenu, header, .submenu-toggle, #abrir-menu" data-toggle="show"></div></header>
+
+<div class="mobile-logo-bleed d-md-none">
+  <img class="mobile-logo-bleed-img" src="assets/images/perro-logo-lime.svg" alt="Perro">
+</div>
+
+<button type="button" id="themeToggle" class="theme-toggle" aria-label="Switch to light mode">
+  <svg class="theme-toggle__icon" viewBox="0 0 24 24" aria-hidden="true">
+    <circle class="theme-toggle__fill" cx="12" cy="12" r="9" />
+    <circle class="theme-toggle__ring" cx="12" cy="12" r="9" />
+  </svg>
+</button>
+
+<main class="page-home">
+  <div class="container-fluid px-30">
+    <div class="row pt-80 pt-md-100 justify-content-center hero-top-divider">
+      <div class="col-12">
+        <div class="divider-dot"></div>
+      </div>
+      <div class="col-md-10 col-xl-9 pt-30 pt-md-33">
+        <div class="text-center">Neighbourhood restaurant &amp; bar<br />
+Mexican influenced</div>
+        <div class="text-center pt-20">Tues to &nbsp;Sat 1800-LATE<br />
+- Sat Brunch 1100-1400<br />
+Kings court, kings heath, B14 7JZ</div>
+      </div>
+      <div class="col-12 pt-35 pt-lg-40">
+        <div class="divider-dot"></div>
+      </div>
+    </div>
+    <div class="row pt-30 pt-md-40">
+      <div class="col-12">
+        <div class="row">
+          <div class="col-12 col-md-7 col-lg-4 animate-on-scroll">
+            <p>[ Info ]</p>
+            <p class="pt-20">Sharing plates, strong margaritas and<br class="break-lg">
+Mexican-leaning flavours in the heart<br class="break-lg"> of Kings Heath.</p>
+            <p class="pt-20">&nbsp; <a href="mailto:hello@perrobhx.co.uk" class="ch-txt">hello@perrobhx.co.uk</a></p>
+            <p class="pt-20">
+              [ Social ]
+            </p>
+            <div class="d-flex pl-30 pl-md-50">
+              <a class="ch-txt" href="https://www.instagram.com/perro.bhx/?hl=en" target="_blank">( IG )</a>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-4 col-lg-3 pl-md-0 pl-lg-15 ml-auto pt-30">
+            <div class="hover-food position-relative zoom-out">
+              <picture class="img-wrapper asp-1">
+                <img src="assets/images/food/beer.gif" class="w-100 h-100 cover" alt="">
+              </picture>
+            </div>
+          </div>
+          <div class="col-12 pt-md-30 pt-lg-0"></div>
+
+          <div class="mobile-slider">
+            <div class="col-md-6 col-lg-4 pt-30 pb-md-30 pt-md-0 minus-180 mobile-slide is-active">
+              <div class="hover-food zoom-out">
+                <picture class="img-wrapper asp-1">
+                  <img src="assets/images/food/IMG_3430.jpg" class="w-100 h-100 cover" alt="">
+                </picture>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-5 pt-30 pb-30 pt-md-0 minus-180 mobile-slide">
+              <div class="hover-food zoom-out">
+                <picture class="img-wrapper asp-2">
+                  <img src="assets/images/food/IMG_3433.jpg" class="w-100 h-100 cover" alt="">
+                </picture>
+              </div>
+            </div>
+
+            <div class="col-12 col-md-5 col-lg-4 ml-auto-md minus-80 mobile-slide">
+              <div class="hover-food zoom-out">
+                <picture class="img-wrapper asp-2">
+                  <img src="assets/images/food/IMG_3432.jpg" class="w-100 h-100 cover" alt="">
+                </picture>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 pt-80 pt-md-100 pt-lg-135 pre-footer-divider">
+      <div class="divider-dot"></div>
+    </div>
+  </div>
+  <div class="container-pre px-15 px-md-30">
+    <pre class="ascii-idle"></pre>
+    <img class="ascii-idle-logo" src="assets/images/perro-logo-lime.svg" alt="Perro">
+  </div>
+
+</main>
+
+<div class="container-logo px-15 px-md-30">
+  <div class="row justify-content-center h-100">
+    <div class="col-lg-6 h-100">
+      <div class="sticky-home px-lg-30">
+        <img class="pr-perro-logo" src="assets/images/perro-logo-lime.svg" alt="PERROZZZZ">
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ticker-bar" aria-hidden="true">
+  <div class="ticker-bar__track" id="tickerTrack"></div>
+</div>
+
+<footer>
+  <div class="saturation-knob" aria-hidden="true">
+    <svg class="saturation-knob__dial" viewBox="0 0 40 40" width="40" height="40">
+      <circle class="saturation-knob__track" cx="20" cy="20" r="16" />
+      <path class="saturation-knob__arc" d=""></path>
+      <line class="saturation-knob__pointer" x1="20" y1="20" x2="20" y2="9" />
+    </svg>
+    <div class="saturation-knob__value">100</div>
+  </div>
+  <div class="footer-black">
+    <nav class="footer-nav">
+      <a class="ch-txt" href="menu.html">Menu</a>
+      <a class="ch-txt" href="https://booking.resdiary.com/widget/Standard/Perro/62717?utm_source=ig&amp;utm_medium=social&amp;utm_content=link_in_bio&amp;fbclid=PAcGRvZgJleHRuA2FlbQIxMQBzcnRjBmFwcF9pZA85MzY2MTk3NDMzOTI0NTkAAadMfv6LZvqKgCAAJj1WRfeI-OoyWoDMJLTXB_LsNaTdyxFVPye0tW4mMnxuGg_aem_HV9KHA7Fn1s6rLRen4JtEA&amp;utm_id=97760_v0_s00_e0_tv3" target="_blank" rel="noopener">Booking</a>
+      <a class="ch-txt" href="faq.html">FAQ</a>
+      <a class="ch-txt" href="https://www.google.com/maps/place/Perro/@52.4333654,-1.8982269,16z/data=!4m10!1m2!2m1!1sUnit+2+Kings+Court,+High+Street,+Kings+Heath,+Birmingham+B14+7JZ!3m6!1s0x4870bd4d0a9d3355:0x411e44e5193675cf!8m2!3d52.4352009!4d-1.8930399!15sCkBVbml0IDIgS2luZ3MgQ291cnQsIEhpZ2ggU3RyZWV0LCBLaW5ncyBIZWF0aCwgQmlybWluZ2hhbSBCMTQgN0paWj8iPXVuaXQgMiBraW5ncyBjb3VydCBoaWdoIHN0cmVldCBraW5ncyBoZWF0aCBiaXJtaW5naGFtIGIxNCA3anqSARJtZXhpY2FuX3Jlc3RhdXJhbnTgAQA!16s%2Fg%2F11xklgwmsv?entry=ttu&amp;g_ep=EgoyMDI2MDkwOS4wIKXMDSoASAFQAw%3D%3D" target="_blank">Location</a>
+      <a class="ch-txt" href="https://www.instagram.com/perro.bhx/?hl=en" target="_blank">IG</a>
+    </nav>
+    <div class="footer-logo-giant">
+      <img src="assets/images/perro-logo-lime.svg" alt="Perro">
+    </div>
+  </div>
+</footer>
+
+<script>document.body.classList.remove("no-js");</script>
+<script src="js/home.js"></script>
+<script src="js/kitchen-status.js"></script>
+<script src="js/weather-status.js"></script>
+<script src="js/ticker.js"></script>
+<script src="js/saturation-knob.js"></script>
+<script src="js/ripple-logo.js"></script>
+</body>
+</html>
