@@ -1,4 +1,6 @@
-/* FAQ-only presentation; the shared homepage identity remains in home.css. */
+/* FAQ-only presentation; the shared homepage identity remains in home.css.
+   The contained content-column width (.page-content-col) is shared with
+   menu.html too, so it lives in home.css instead of here. */
 .page-faq .faq-intro { margin: 8px 0 58px; }
 .page-faq .faq-kicker { margin: 0; font-size: clamp(17px, 1.9vw, 25px); line-height: 1.2; }
 .page-faq .faq-intro-copy { margin: 20px 0 0; max-width: 38ch; opacity: .58; font-size: 13px; }

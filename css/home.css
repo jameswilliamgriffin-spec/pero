@@ -123,15 +123,20 @@ a:hover {
 
 /* Clears the fixed header + the fixed logo band beneath it (--header-h is
    measured in JS; the clamp mirrors .mobile-logo-bleed's own height formula
-   so this stays in sync at every screen size). On the homepage at 1070px+,
-   .mobile-logo-bleed--home hides and the hero logo takes over instead (it's
-   absolutely positioned, so it doesn't need main's padding to clear it) —
-   menu.html/faq.html keep their logo band at every width, so they keep this
-   padding at every width too. */
-main { opacity: 0; padding-top: calc(var(--header-h, 80px) + clamp(90px, 24vw, 150px)); }
+   so this stays in sync at every screen size). At 1070px+ .mobile-logo-bleed
+   hides on every page (see the rule further down) so no extra clearance is
+   needed there either. */
+main {
+  opacity: 0;
+  padding-top: calc(var(--header-h, 80px) + clamp(90px, 24vw, 150px));
+  transition: opacity 550ms cubic-bezier(0.65, 0, 0.35, 1);
+}
 main.is-loaded { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  main { transition: none; }
+}
 @media (min-width: 1070px) {
-  main.page-home { padding-top: 0; }
+  main { padding-top: 0; }
 }
 
 button {
@@ -409,13 +414,8 @@ header .navbar .nav-container .nav-item .nav-link {
 }
 
 /* Fixed under the header like the theme toggle and the mobile menu button,
-   so it never scrolls away. On the homepage (.mobile-logo-bleed--home) it
-   hides at 1070px+, where the sticky hero logo (.container-logo, further
-   down this file) takes over — that element only exists on index.html, so
-   menu.html/faq.html keep this fixed band at every width instead. Previously
-   this was mobile-only (hidden at 768px+) while the hero logo only picked up
-   at 1070px+, leaving a gap between 768–1069px with no logo whatsoever; now
-   the two hand off at the same 1070px breakpoint so a logo is always visible. */
+   so it never scrolls away below 1070px, where it hides — on the homepage
+   because the sticky hero logo takes over further down the page. */
 .mobile-logo-bleed {
   position: fixed;
   top: var(--header-h, 80px);
@@ -437,12 +437,41 @@ header .navbar .nav-container .nav-item .nav-link {
   flex-shrink: 0;
 }
 @media (min-width: 1070px) {
-  .mobile-logo-bleed--home { display: none; }
+  .mobile-logo-bleed { display: none; }
 }
 
 @media (max-width: 767.98px) {
   .hero-top-divider.pt-80 { padding-top: 60px; }
   .pre-footer-divider.pt-80 { padding-top: 40px; }
+}
+
+/* menu.html/faq.html have no hero logo to take over at 1070px+ like the
+   homepage does, so — unlike .mobile-logo-bleed above — they get a second,
+   separate logo image (same theme-swapped source, see home.js) that's
+   static rather than fixed, sitting inside the page's own content column
+   instead of floating above it. Hidden below 1070px since .mobile-logo-bleed
+   already covers that range there. */
+.page-content-col__logo { display: none; }
+@media (min-width: 1070px) {
+  .page-content-col__logo {
+    display: block;
+    margin-bottom: 40px;
+  }
+  .page-content-col__logo img {
+    display: block;
+    width: 100%;
+    max-width: 320px;
+    height: auto;
+  }
+}
+
+/* Shared centred content column for menu.html and faq.html — their old
+   col-md-9/col-lg-8/col-xl-7-style classes were never actually defined
+   anywhere in this grid, so both silently rendered at the full row width
+   (col-12) above mobile. A real max-width instead, centred by the row's
+   own justify-content: center, and shared so both pages stay consistent. */
+@media (min-width: 768px) {
+  .page-content-col { max-width: 720px; }
 }
 
 header .submenu {

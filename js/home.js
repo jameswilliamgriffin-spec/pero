@@ -29,9 +29,16 @@
     if (main) main.classList.add('is-loaded');
   }
   // After the outgoing wipe, show the destination without a second loader.
+  // main's opacity transition only plays if the browser has actually
+  // committed a frame at opacity:0 first — adding is-loaded in the same
+  // synchronous pass as the initial render (as revealPage() used to do
+  // here) can collapse straight to opacity:1 with nothing to animate from,
+  // so wait a couple of frames before revealing, same as runWipe's rise.
   if (arrivingFromWipe) {
     document.documentElement.classList.add('page-wipe-arrival');
-    revealPage();
+    requestAnimationFrame(function () {
+      requestAnimationFrame(revealPage);
+    });
   }
   window.addEventListener('load', function () {
     if (!arrivingFromWipe) setTimeout(revealPage, 600);
@@ -64,7 +71,10 @@
   var themeToggle = document.getElementById('themeToggle');
   var heroLogo = document.querySelector('.pr-perro-logo');
   var asciiLogo = document.querySelector('.ascii-idle-logo');
-  var mobileLogo = document.querySelector('.mobile-logo-bleed-img');
+  /* menu.html/faq.html render a second .mobile-logo-bleed-img — see
+     .page-content-col__logo in home.css — so this needs every match, not
+     just the first. */
+  var mobileLogos = Array.prototype.slice.call(document.querySelectorAll('.mobile-logo-bleed-img'));
   var footerLogo = document.querySelector('.footer-logo-giant img');
   var themeOverlay = document.querySelector('.theme-transition-overlay');
   var themeAnimating = false;
@@ -78,7 +88,7 @@
       if (themeToggle) themeToggle.setAttribute('aria-label', 'Switch to dark mode');
       if (heroLogo) heroLogo.src = LOGO_LIGHT;
       if (asciiLogo) asciiLogo.src = LOGO_LIGHT;
-      if (mobileLogo) mobileLogo.src = LOGO_LIGHT;
+      mobileLogos.forEach(function (img) { img.src = LOGO_LIGHT; });
       /* the footer's own background is the inverse of the site's, so its
          logo needs the inverse logo too */
       if (footerLogo) footerLogo.src = LOGO_DARK;
@@ -87,7 +97,7 @@
       if (themeToggle) themeToggle.setAttribute('aria-label', 'Switch to light mode');
       if (heroLogo) heroLogo.src = LOGO_DARK;
       if (asciiLogo) asciiLogo.src = LOGO_DARK;
-      if (mobileLogo) mobileLogo.src = LOGO_DARK;
+      mobileLogos.forEach(function (img) { img.src = LOGO_DARK; });
       if (footerLogo) footerLogo.src = LOGO_LIGHT;
     }
   }
