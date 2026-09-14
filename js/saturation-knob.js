@@ -32,6 +32,7 @@
 
   function initKnob(container) {
     var svg = container.querySelector('.saturation-knob__dial');
+    var hitArea = container.querySelector('.saturation-knob__hit') || svg;
     var arcPath = container.querySelector('.saturation-knob__arc');
     var pointer = container.querySelector('.saturation-knob__pointer');
     var valueEl = container.querySelector('.saturation-knob__value');
@@ -105,7 +106,7 @@
       e.preventDefault();
     }
 
-    svg.addEventListener('pointerdown', onPointerDown);
+    hitArea.addEventListener('pointerdown', onPointerDown);
   }
 
   var knobs = document.querySelectorAll('.saturation-knob');

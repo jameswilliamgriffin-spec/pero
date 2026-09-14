@@ -38,6 +38,21 @@
   });
 
   /* ----------------------------------------
+     HEADER HEIGHT — keeps the fixed logo band (and main's clearance
+     padding) pinned exactly under the fixed header at every breakpoint,
+     since the header's own height changes with the responsive nav.
+     ---------------------------------------- */
+
+  var headerEl = document.querySelector('header');
+  function setHeaderHeight() {
+    if (!headerEl) return;
+    document.documentElement.style.setProperty('--header-h', headerEl.getBoundingClientRect().height + 'px');
+  }
+  setHeaderHeight();
+  window.addEventListener('load', setHeaderHeight);
+  window.addEventListener('resize', debounce(setHeaderHeight, 200));
+
+  /* ----------------------------------------
      THEME TOGGLE — dark (default) / light, persisted
      ---------------------------------------- */
 
@@ -297,41 +312,10 @@
     revealTargets.forEach(function (el) { el.classList.add('animate'); });
   }
 
-  /* ----------------------------------------
-     MOBILE IMAGE SLIDER — cycles the info-grid photos every 7s, mobile
-     only (the wrapper is display:contents at md+, so this simply has
-     nothing to animate on desktop).
-     ---------------------------------------- */
-
-  var mobileSlides = Array.prototype.slice.call(document.querySelectorAll('.mobile-slider .mobile-slide'));
-  if (mobileSlides.length) {
-    var slideIndex = mobileSlides.findIndex(function (el) { return el.classList.contains('is-active'); });
-    if (slideIndex === -1) slideIndex = 0;
-    var slideTimer = null;
-
-    function showNextSlide() {
-      mobileSlides[slideIndex].classList.remove('is-active');
-      slideIndex = (slideIndex + 1) % mobileSlides.length;
-      mobileSlides[slideIndex].classList.add('is-active');
-    }
-
-    function startSlider() {
-      if (slideTimer) return;
-      slideTimer = setInterval(showNextSlide, 7000);
-    }
-    function stopSlider() {
-      clearInterval(slideTimer);
-      slideTimer = null;
-    }
-
-    var mobileMQ = window.matchMedia('(max-width: 767.98px)');
-    function syncSlider() {
-      if (mobileMQ.matches) startSlider(); else stopSlider();
-    }
-    syncSlider();
-    if (mobileMQ.addEventListener) mobileMQ.addEventListener('change', syncSlider);
-    else if (mobileMQ.addListener) mobileMQ.addListener(syncSlider);
-  }
+  /* The old auto-cycling mobile slider (toggling .is-active between the 3
+     desktop grid tiles) has been replaced by the swipeable galleries in
+     js/mobile-image-slider.js — .mobile-slider is now display:none on
+     mobile, so there's nothing left here to cycle. */
 
   /* ----------------------------------------
      STICKY LOGO — pins lower once the footer comes into view
@@ -463,6 +447,7 @@
       document.documentElement.style.setProperty('--idle-logo-h', idleLogo.getBoundingClientRect().height + 'px');
     }
     flameContainer.classList.add('show');
+    if (themeToggle) themeToggle.classList.add('is-hidden');
     setTimeout(startFlame, 500);
   }
 
@@ -475,6 +460,7 @@
     document.addEventListener('click', function (event) {
       if (event.target.closest('.container-pre')) {
         flameContainer.classList.remove('show');
+        if (themeToggle) themeToggle.classList.remove('is-hidden');
       }
     });
     window.addEventListener('blur', function () { resetIdleTimeout(15000); });

@@ -38,6 +38,7 @@
   justify-content: center;
   cursor: pointer;
 }
+.theme-toggle.is-hidden { display: none; }
 @media (min-width: 768px) {
   .theme-toggle { top: 30px; right: 30px; }
 }
@@ -120,8 +121,18 @@ a:hover {
   text-decoration: none;
 }
 
-main { opacity: 0; }
+/* Clears the fixed header + the fixed logo band beneath it (--header-h is
+   measured in JS; the clamp mirrors .mobile-logo-bleed's own height formula
+   so this stays in sync at every screen size). On the homepage at 1070px+,
+   .mobile-logo-bleed--home hides and the hero logo takes over instead (it's
+   absolutely positioned, so it doesn't need main's padding to clear it) —
+   menu.html/faq.html keep their logo band at every width, so they keep this
+   padding at every width too. */
+main { opacity: 0; padding-top: calc(var(--header-h, 80px) + clamp(90px, 24vw, 150px)); }
 main.is-loaded { opacity: 1; }
+@media (min-width: 1070px) {
+  main.page-home { padding-top: 0; }
+}
 
 button {
   font: inherit;
@@ -397,16 +408,27 @@ header .navbar .nav-container .nav-item .nav-link {
   .menu-dots-btn { display: none; }
 }
 
+/* Fixed under the header like the theme toggle and the mobile menu button,
+   so it never scrolls away. On the homepage (.mobile-logo-bleed--home) it
+   hides at 1070px+, where the sticky hero logo (.container-logo, further
+   down this file) takes over — that element only exists on index.html, so
+   menu.html/faq.html keep this fixed band at every width instead. Previously
+   this was mobile-only (hidden at 768px+) while the hero logo only picked up
+   at 1070px+, leaving a gap between 768–1069px with no logo whatsoever; now
+   the two hand off at the same 1070px breakpoint so a logo is always visible. */
 .mobile-logo-bleed {
+  position: fixed;
+  top: var(--header-h, 80px);
+  left: 0;
+  z-index: 8;
+  width: 100%;
   overflow: hidden;
   height: 24vw;
   min-height: 90px;
   max-height: 150px;
-  margin-top: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--color-bg);
 }
 .mobile-logo-bleed img {
   width: 104%;
@@ -414,8 +436,8 @@ header .navbar .nav-container .nav-item .nav-link {
   height: auto;
   flex-shrink: 0;
 }
-@media (min-width: 768px) {
-  .mobile-logo-bleed { display: none; }
+@media (min-width: 1070px) {
+  .mobile-logo-bleed--home { display: none; }
 }
 
 @media (max-width: 767.98px) {
@@ -480,6 +502,7 @@ header .submenu a {
 .img-wrapper {
   width: 100%;
   display: block;
+  position: relative;
 }
 .img-wrapper img {
   width: 100%;
@@ -499,33 +522,96 @@ header .submenu a {
   }
 }
 
+/* Desktop image rotation — two stacked layers per position, crossfaded by
+   js/image-rotation.js. Fixed aspect-ratio on .asp-1/.asp-2 above means the
+   box never resizes; only the layers' opacity ever animates. */
+.rotate-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity var(--rotate-fade-ms, 900ms) ease;
+  pointer-events: none;
+}
+.rotate-layer.is-visible { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .rotate-layer { transition: none; }
+}
+
 .hover-food .img-wrapper img {
   transition: transform 0.3s cubic-bezier(0.38, 0.005, 0.215, 1);
 }
 
-/* Mobile-only auto-cycling slider: at desktop widths this wrapper is
-   display:contents (i.e. invisible to the box model), so its children
-   remain direct flex items of .row exactly as before, keeping the
-   original desktop grid untouched. On mobile it becomes a real stacking
-   context so only the .is-active slide shows, cross-fading every 7s. */
+/* At desktop widths this wrapper is display:contents (invisible to the box
+   model), so its children remain direct flex items of .row — the 3
+   independently-rotating grid tiles handled by js/image-rotation.js. On
+   mobile the whole thing is replaced by the swipeable galleries below. */
 .mobile-slider { display: contents; }
 @media (max-width: 767.98px) {
-  .mobile-slider {
+  .mobile-slider { display: none; }
+}
+
+/* ---------- mobile image sliders (portrait gallery, landscape gallery) ---------
+   Populated by js/mobile-image-slider.js from the same manifest.json the
+   desktop rotation uses. Desktop-hidden via .d-md-none; on mobile the two
+   galleries plus the GIF are reordered below the info column via `order`. */
+.mobile-portrait-slider,
+.mobile-landscape-slider {
+  display: none;
+}
+@media (max-width: 767.98px) {
+  .row > .gif-slot { order: 3; }
+  .row > .mobile-portrait-slider { order: 1; }
+  .row > .mobile-landscape-slider { order: 2; }
+
+  .mobile-portrait-slider,
+  .mobile-landscape-slider {
     display: block;
-    position: relative;
     width: 100%;
+    padding-top: 30px;
   }
-  .mobile-slider .mobile-slide {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    transition: opacity 0.8s ease;
-    pointer-events: none;
+  /* Editorial offset: each image hugs one edge and breathes on the other,
+     alternating sides between the two galleries instead of both sitting in
+     symmetric gutters — the GIF below keeps the ordinary gutter but doubled. */
+  .mobile-portrait-slider { padding-left: 15px; padding-right: 60px; }
+  .mobile-landscape-slider { padding-left: 60px; padding-right: 15px; }
+  .row > .gif-slot { padding-left: 45px; padding-right: 45px; }
+  .mobile-slider-scroll {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
   }
-  .mobile-slider .mobile-slide.is-active {
-    position: relative;
-    opacity: 1;
-    pointer-events: auto;
+  .mobile-slider-scroll::-webkit-scrollbar {
+    display: none;
+  }
+  .mobile-slider-track {
+    display: flex;
+  }
+  .mobile-slider-item {
+    flex: 0 0 100%;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    overflow: hidden;
+  }
+  .mobile-portrait-slider .mobile-slider-item { aspect-ratio: 0.735; }
+  .mobile-landscape-slider .mobile-slider-item { aspect-ratio: 1.42; }
+  .mobile-slider-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    -webkit-user-drag: none;
+    user-select: none;
+  }
+  .mobile-slider-scroll { cursor: grab; }
+  .mobile-slider-scroll.is-dragging {
+    cursor: grabbing;
+    scroll-snap-type: none;
   }
 }
 @media (min-width: 1070px) {
@@ -569,14 +655,22 @@ header .submenu a {
 }
 
 .zoom-out { pointer-events: none; }
-.zoom-out img { opacity: 0; transform: scale(1.05); }
+.zoom-out img:not(.rotate-layer) { opacity: 0; transform: scale(1.05); }
 .zoom-out.animate { pointer-events: auto; }
-.zoom-out.animate img {
+.zoom-out.animate img:not(.rotate-layer) {
   transform: scale(1);
   animation-name: zoom-out;
   animation-fill-mode: forwards;
   transition-timing-function: cubic-bezier(0.38, 0.005, 0.215, 1);
   animation-duration: 0.8s;
+}
+/* The rotating positions still get the scale-in reveal (matching every other
+   .zoom-out tile), just without the opacity fight against .rotate-layer's
+   own crossfade opacity. */
+.zoom-out.img-rotate .img-wrapper { transform: scale(1.05); }
+.zoom-out.img-rotate.animate .img-wrapper {
+  transform: scale(1);
+  transition: transform 0.8s cubic-bezier(0.38, 0.005, 0.215, 1);
 }
 
 @keyframes fade-in {
@@ -736,21 +830,21 @@ footer {
 @media (max-width: 767.98px) {
   .footer-nav {
     flex-wrap: nowrap;
-    gap: clamp(18px, 5.5vw, 24px);
+    gap: clamp(16px, 5vw, 22px);
     padding: 0 16px;
-    font-size: 13px;
+    font-size: 15px;
   }
 }
 
 .footer-logo-giant {
   position: relative;
-  margin-top: clamp(135px, calc(21vw + 15px), 385px);
+  margin-top: clamp(45px, calc(7vw + 5px), 128px);
   padding-bottom: clamp(60px, 14vw, 250px);
 }
 @media (max-width: 767.98px) {
   .footer-logo-giant {
-    margin-top: 40px;
-    padding-bottom: 100px;
+    margin-top: 64px;
+    padding-bottom: 150px;
   }
 }
 .footer-logo-giant img {
@@ -772,6 +866,19 @@ footer {
   flex-direction: row;
   align-items: center;
   gap: 8px;
+}
+/* A plain wrapper carries the enlarged hit area — SVG root elements don't
+   reliably render/hit-test ::before in every browser, so the trick (same
+   one .menu-dots-btn::before uses) goes on this div instead of the <svg>. */
+.saturation-knob__hit {
+  position: relative;
+  display: flex;
+  touch-action: none;
+}
+.saturation-knob__hit::before {
+  content: "";
+  position: absolute;
+  inset: -16px;
 }
 .saturation-knob__dial {
   width: 40px;
@@ -811,11 +918,42 @@ footer {
   .saturation-knob {
     left: 50%;
     right: auto;
-    bottom: 16px;
+    bottom: 32px;
     transform: translateX(-50%);
   }
   .saturation-knob__dial { width: 60px; height: 60px; }
   .saturation-knob__value { font-size: 15px; }
+}
+
+/* ---------- footer credit ---------- */
+
+.footer-credit {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  z-index: 2;
+  display: flex;
+  gap: 6px;
+  font-family: "Departure Mono", monospace;
+  font-size: 11px;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: var(--footer-fg);
+}
+.footer-credit__studio { color: var(--footer-fg); }
+
+@media (max-width: 767.98px) {
+  .footer-credit {
+    display: contents;
+  }
+  .footer-credit__year,
+  .footer-credit__studio {
+    position: absolute;
+    bottom: 16px;
+    font-size: 13px;
+  }
+  .footer-credit__year { left: 16px; }
+  .footer-credit__studio { right: 16px; }
 }
 
 /* ---------- ascii footer logo ---------- */
@@ -890,7 +1028,7 @@ footer {
   position: absolute;
   width: 100%;
   top: 50px;
-  bottom: var(--idle-logo-h, 0px);
+  bottom: calc(var(--idle-logo-h, 0px) + 10px);
   left: 0;
   pointer-events: none;
 }
@@ -916,15 +1054,22 @@ footer {
 
 body::after {
   content: "";
-  position: fixed;
+  position: absolute;
   inset: 0;
   z-index: 9999; /* Above page artwork; below theme controls and transitions. */
   pointer-events: none;
-  opacity: 0.85; /* Temporary visibility check; restore to 0.085 after review. */
+  opacity: 0.85;
   mix-blend-mode: soft-light;
   background-image: url("../assets/images/print-grain.svg");
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
+  /* Tiled at one viewport-height per repeat, not stretched to the full
+     scrollable page — rendering the SVG turbulence filter across an entire
+     multi-thousand-pixel-tall page in one stretch is expensive enough to
+     make the browser drop paint on long pages (a blank flat-colour band
+     appears partway down). Tiling keeps each render the cost of one
+     viewport while still scrolling with the page instead of sitting fixed
+     on top of it. */
+  background-size: 100% 100vh;
+  background-repeat: repeat-y;
 }
 
 @media print {

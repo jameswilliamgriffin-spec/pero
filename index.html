@@ -95,7 +95,7 @@
 </div>
 <div class="submenu-toggle" data-target="#submenu, header, .submenu-toggle, #abrir-menu" data-toggle="show"></div></header>
 
-<div class="mobile-logo-bleed d-md-none">
+<div class="mobile-logo-bleed mobile-logo-bleed--home">
   <img class="mobile-logo-bleed-img" src="assets/images/perro-logo-lime.svg" alt="Perro">
 </div>
 
@@ -115,8 +115,8 @@
       <div class="col-md-10 col-xl-9 pt-30 pt-md-33">
         <div class="text-center">Neighbourhood restaurant &amp; bar<br />
 Mexican influenced</div>
-        <div class="text-center pt-20">Tues to &nbsp;Sat 1800-LATE<br />
-- Sat Brunch 1100-1400<br />
+        <div class="text-center pt-20">Tues to &nbsp;Sat 1800-LATE&nbsp;-<br />
+Sat Brunch 1100-1400<br />
 Kings court, kings heath, B14 7JZ</div>
       </div>
       <div class="col-12 pt-35 pt-lg-40">
@@ -139,7 +139,7 @@ Mexican-leaning flavours in the heart<br class="break-lg"> of Kings Heath.</p>
             </div>
           </div>
 
-          <div class="col-12 col-md-4 col-lg-3 pl-md-0 pl-lg-15 ml-auto pt-30">
+          <div class="col-12 col-md-4 col-lg-3 pl-md-0 pl-lg-15 ml-auto pt-30 gif-slot">
             <div class="hover-food position-relative zoom-out">
               <picture class="img-wrapper asp-1">
                 <img src="assets/images/food/beer.gif" class="w-100 h-100 cover" alt="">
@@ -148,27 +148,33 @@ Mexican-leaning flavours in the heart<br class="break-lg"> of Kings Heath.</p>
           </div>
           <div class="col-12 pt-md-30 pt-lg-0"></div>
 
+          <div class="mobile-portrait-slider d-md-none" data-slider-orientation="portrait" aria-label="Food photos, portrait"></div>
+          <div class="mobile-landscape-slider d-md-none" data-slider-orientation="landscape" aria-label="Food photos, landscape"></div>
+
           <div class="mobile-slider">
             <div class="col-md-6 col-lg-4 pt-30 pb-md-30 pt-md-0 minus-180 mobile-slide is-active">
-              <div class="hover-food zoom-out">
+              <div class="hover-food zoom-out img-rotate" data-rotate-orientation="portrait" data-rotate-file="oyster-martini" data-rotate-pairgroup="">
                 <picture class="img-wrapper asp-1">
-                  <img src="assets/images/food/IMG_3430.jpg" class="w-100 h-100 cover" alt="">
+                  <img class="rotate-layer is-visible" src="assets/images/food/IMG_3430.jpg" alt="A hand holding a chargrilled oyster with hot sauce, next to a martini glass">
+                  <img class="rotate-layer" alt="">
                 </picture>
               </div>
             </div>
 
             <div class="col-md-6 col-lg-5 pt-30 pb-30 pt-md-0 minus-180 mobile-slide">
-              <div class="hover-food zoom-out">
+              <div class="hover-food zoom-out img-rotate" data-rotate-orientation="landscape" data-rotate-file="crudo-citrus-plate" data-rotate-pairgroup="">
                 <picture class="img-wrapper asp-2">
-                  <img src="assets/images/food/IMG_3433.jpg" class="w-100 h-100 cover" alt="">
+                  <img class="rotate-layer is-visible" src="assets/images/food/IMG_3433.jpg" alt="A chef plating a citrus crudo dish with a light trail from the fork">
+                  <img class="rotate-layer" alt="">
                 </picture>
               </div>
             </div>
 
             <div class="col-12 col-md-5 col-lg-4 ml-auto-md minus-80 mobile-slide">
-              <div class="hover-food zoom-out">
+              <div class="hover-food zoom-out img-rotate" data-rotate-orientation="landscape" data-rotate-file="birria-quesadilla-landscape" data-rotate-pairgroup="birria-quesadilla">
                 <picture class="img-wrapper asp-2">
-                  <img src="assets/images/food/IMG_3432.jpg" class="w-100 h-100 cover" alt="">
+                  <img class="rotate-layer is-visible" src="assets/images/rotation/landscape/birria-quesadilla.webp" alt="Birria with quesadillas, lime and salsa verde on a metal plate">
+                  <img class="rotate-layer" alt="">
                 </picture>
               </div>
             </div>
@@ -203,11 +209,13 @@ Mexican-leaning flavours in the heart<br class="break-lg"> of Kings Heath.</p>
 
 <footer>
   <div class="saturation-knob" aria-hidden="true">
-    <svg class="saturation-knob__dial" viewBox="0 0 40 40" width="40" height="40">
-      <circle class="saturation-knob__track" cx="20" cy="20" r="16" />
-      <path class="saturation-knob__arc" d=""></path>
-      <line class="saturation-knob__pointer" x1="20" y1="20" x2="20" y2="9" />
-    </svg>
+    <div class="saturation-knob__hit">
+      <svg class="saturation-knob__dial" viewBox="0 0 40 40" width="40" height="40">
+        <circle class="saturation-knob__track" cx="20" cy="20" r="16" />
+        <path class="saturation-knob__arc" d=""></path>
+        <line class="saturation-knob__pointer" x1="20" y1="20" x2="20" y2="9" />
+      </svg>
+    </div>
     <div class="saturation-knob__value">100</div>
   </div>
   <div class="footer-black">
@@ -222,10 +230,15 @@ Mexican-leaning flavours in the heart<br class="break-lg"> of Kings Heath.</p>
       <img src="assets/images/perro-logo-lime.svg" alt="Perro">
     </div>
   </div>
+  <div class="footer-credit">
+    <span class="footer-credit__year">2026</span><a class="footer-credit__studio ch-txt" href="mailto:jameswilliamgriffin@googlemail.com">CMYKern</a>
+  </div>
 </footer>
 
 <script>document.body.classList.remove("no-js");</script>
 <script src="js/home.js"></script>
+<script src="js/image-rotation.js"></script>
+<script src="js/mobile-image-slider.js"></script>
 <script src="js/kitchen-status.js"></script>
 <script src="js/weather-status.js"></script>
 <script src="js/ticker.js"></script>
