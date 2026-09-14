@@ -572,12 +572,35 @@ header .submenu a {
     width: 100%;
     padding-top: 30px;
   }
-  /* Editorial offset: each image hugs one edge and breathes on the other,
-     alternating sides between the two galleries instead of both sitting in
-     symmetric gutters — the GIF below keeps the ordinary gutter but doubled. */
-  .mobile-portrait-slider { padding-left: 15px; padding-right: 60px; }
-  .mobile-landscape-slider { padding-left: 60px; padding-right: 15px; }
-  .row > .gif-slot { padding-left: 45px; padding-right: 45px; }
+  /* Editorial offset: the top image is centred at its original (asymmetric)
+     width; the middle (landscape) image runs fully edge-to-edge; the GIF
+     keeps the doubled, symmetric gutter. Vertical gaps between the three
+     are 25% more than the base 30px (37.5px).
+     Previous versions, in case we want to go back:
+       — before the full-bleed middle image: .mobile-landscape-slider { padding-left: 60px; padding-right: 15px; padding-top: 30px; }
+         and .row > .gif-slot had padding-top: 30px (from the .pt-30 utility, unoverridden).
+       — before centring the top image: .mobile-portrait-slider { padding-left: 15px; padding-right: 60px; } (hugged the left edge) */
+  .mobile-portrait-slider { padding-left: 37.5px; padding-right: 37.5px; }
+  .mobile-landscape-slider {
+    /* Negative margin cancels the row's own 15px structural gutter (from
+       .container-fluid.px-30's 30px minus .row's -15px) so this reaches
+       the true viewport edge, not just its own zeroed padding. The extra
+       30px of width makes up for what the negative margins pull it past —
+       margin doesn't add to the box's own width, only its position. */
+    width: calc(100% + 30px);
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: -15px;
+    margin-right: -15px;
+    padding-top: 37.5px;
+    /* Sits above the fixed header logo (z-index 8) so the logo tucks behind
+       this image specifically as the page scrolls past it — a depth cue —
+       while staying in front of (i.e. behind, from the logo's side) every
+       other image, which the logo still overlays as it already did. */
+    position: relative;
+    z-index: 9;
+  }
+  .row > .gif-slot { padding-left: 45px; padding-right: 45px; padding-top: 37.5px; }
   .mobile-slider-scroll {
     width: 100%;
     overflow-x: auto;
@@ -715,6 +738,17 @@ header .submenu a {
 
 /* Mobile: the logo strip is not fixed below 1070px (container-logo
    is display:none) — the logo simply isn't rendered there. */
+
+/* Desktop depth cue, mirroring the mobile middle-image treatment above:
+   the bottom-right tile of the 3-image grid sits above the hero logo
+   (z-index 99) so the logo tucks behind it, while still passing behind
+   every other tile as it already did. */
+@media (min-width: 1070px) {
+  .mobile-slide--depth {
+    position: relative;
+    z-index: 100;
+  }
+}
 
 /* ---------- status ticker ---------- */
 
