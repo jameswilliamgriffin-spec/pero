@@ -1,103 +1,5 @@
 [
   {
-    "file": "tacos-crema-pour-landscape",
-    "orientation": "landscape",
-    "pairGroup": "tacos-crema-pour",
-    "path": "assets/images/rotation/landscape/tacos-crema-pour.webp",
-    "alt": "Four tacos on a green plate, crema being poured over the top"
-  },
-  {
-    "file": "tacos-crema-pour-portrait",
-    "orientation": "portrait",
-    "pairGroup": "tacos-crema-pour",
-    "path": "assets/images/rotation/portrait/tacos-crema-pour.webp",
-    "alt": "Four tacos on a green plate, crema being poured over the top, with a drink alongside"
-  },
-  {
-    "file": "mussels-overhead-landscape",
-    "orientation": "landscape",
-    "pairGroup": "mussels-overhead",
-    "path": "assets/images/rotation/landscape/mussels-overhead.webp",
-    "alt": "Mussels in broth with herbs and a lime half, overhead on an orange background"
-  },
-  {
-    "file": "mussels-overhead-portrait",
-    "orientation": "portrait",
-    "pairGroup": "mussels-overhead",
-    "path": "assets/images/rotation/portrait/mussels-overhead.webp",
-    "alt": "Mussels in broth with herbs and a lime half, overhead on an orange background"
-  },
-  {
-    "file": "cheesecake-plated-landscape",
-    "orientation": "landscape",
-    "pairGroup": "cheesecake-plated",
-    "path": "assets/images/rotation/landscape/cheesecake-plated.webp",
-    "alt": "A slice of burnt Basque cheesecake topped with caviar, on a white plate"
-  },
-  {
-    "file": "cheesecake-plated-portrait",
-    "orientation": "portrait",
-    "pairGroup": "cheesecake-plated",
-    "path": "assets/images/rotation/portrait/cheesecake-plated.webp",
-    "alt": "A slice of burnt Basque cheesecake topped with caviar, on a white plate"
-  },
-  {
-    "file": "birria-quesadilla-landscape",
-    "orientation": "landscape",
-    "pairGroup": "birria-quesadilla",
-    "path": "assets/images/rotation/landscape/birria-quesadilla.webp",
-    "alt": "Birria with quesadillas, lime and salsa verde on a metal plate"
-  },
-  {
-    "file": "birria-quesadilla-portrait",
-    "orientation": "portrait",
-    "pairGroup": "birria-quesadilla",
-    "path": "assets/images/rotation/portrait/birria-quesadilla.webp",
-    "alt": "Birria with quesadillas, lime and salsa verde on a metal plate"
-  },
-  {
-    "file": "jicama-slaw-landscape",
-    "orientation": "landscape",
-    "pairGroup": "jicama-slaw",
-    "path": "assets/images/rotation/landscape/jicama-slaw.webp",
-    "alt": "A chef tossing a jicama and radish slaw in a large metal bowl"
-  },
-  {
-    "file": "jicama-slaw-portrait",
-    "orientation": "portrait",
-    "pairGroup": "jicama-slaw",
-    "path": "assets/images/rotation/portrait/jicama-slaw.webp",
-    "alt": "A chef tossing a jicama and radish slaw in a large metal bowl"
-  },
-  {
-    "file": "refried-beans-chips-landscape",
-    "orientation": "landscape",
-    "pairGroup": "refried-beans-chips",
-    "path": "assets/images/rotation/landscape/refried-beans-chips.webp",
-    "alt": "Refried beans with chives, served with tortilla chips"
-  },
-  {
-    "file": "refried-beans-chips-portrait",
-    "orientation": "portrait",
-    "pairGroup": "refried-beans-chips",
-    "path": "assets/images/rotation/portrait/refried-beans-chips.webp",
-    "alt": "Refried beans with chives, served with tortilla chips"
-  },
-  {
-    "file": "cheesecake-held-landscape",
-    "orientation": "landscape",
-    "pairGroup": "cheesecake-held",
-    "path": "assets/images/rotation/landscape/cheesecake-held.webp",
-    "alt": "Hands holding a plate with a slice of burnt Basque cheesecake and caviar"
-  },
-  {
-    "file": "cheesecake-held-portrait",
-    "orientation": "portrait",
-    "pairGroup": "cheesecake-held",
-    "path": "assets/images/rotation/portrait/cheesecake-held.webp",
-    "alt": "Hands holding a plate with a slice of burnt Basque cheesecake and caviar"
-  },
-  {
     "file": "oyster-martini",
     "orientation": "portrait",
     "pairGroup": null,
@@ -112,13 +14,6 @@
     "alt": "A bowl of mussels in broth next to a bottle of Modelo beer"
   },
   {
-    "file": "tacos-lift",
-    "orientation": "portrait",
-    "pairGroup": null,
-    "path": "assets/images/rotation/portrait/tacos-lift.webp",
-    "alt": "A hand lifting a taco topped with salsa verde and crema"
-  },
-  {
     "file": "tostada-herbs",
     "orientation": "portrait",
     "pairGroup": null,
@@ -126,25 +21,11 @@
     "alt": "A hand holding a tostada topped with grated cheese and herbs"
   },
   {
-    "file": "cocktail-ice-macro",
+    "file": "cheesecake-held-portrait",
     "orientation": "portrait",
-    "pairGroup": null,
-    "path": "assets/images/rotation/portrait/cocktail-ice-macro.webp",
-    "alt": "Close-up of a cocktail glass with large ice cubes"
-  },
-  {
-    "file": "cocktail-top-down",
-    "orientation": "portrait",
-    "pairGroup": null,
-    "path": "assets/images/rotation/portrait/cocktail-top-down.webp",
-    "alt": "Overhead view of a green-lit cocktail with ice"
-  },
-  {
-    "file": "negroni-green-light",
-    "orientation": "portrait",
-    "pairGroup": null,
-    "path": "assets/images/rotation/portrait/negroni-green-light.webp",
-    "alt": "A negroni-style cocktail with ice, lit in green and amber"
+    "pairGroup": "cheesecake-held",
+    "path": "assets/images/rotation/portrait/cheesecake-held.webp",
+    "alt": "Hands holding a plate with a slice of burnt Basque cheesecake and caviar"
   },
   {
     "file": "roasted-potatoes",
@@ -152,6 +33,20 @@
     "pairGroup": null,
     "path": "assets/images/rotation/portrait/roasted-potatoes.webp",
     "alt": "Roasted potatoes with a spiced sauce and crema on a white plate"
+  },
+  {
+    "file": "tacos-lift",
+    "orientation": "portrait",
+    "pairGroup": null,
+    "path": "assets/images/rotation/portrait/tacos-lift.webp",
+    "alt": "A hand lifting a taco topped with salsa verde and crema"
+  },
+  {
+    "file": "cocktail-ice-macro",
+    "orientation": "portrait",
+    "pairGroup": null,
+    "path": "assets/images/rotation/portrait/cocktail-ice-macro.webp",
+    "alt": "Close-up of a cocktail glass with large ice cubes"
   },
   {
     "file": "tacos-lift-reach",
@@ -168,6 +63,13 @@
     "alt": "Close-up of mussels in broth with herbs and a lime half"
   },
   {
+    "file": "negroni-green-light",
+    "orientation": "portrait",
+    "pairGroup": null,
+    "path": "assets/images/rotation/portrait/negroni-green-light.webp",
+    "alt": "A negroni-style cocktail with ice, lit in green and amber"
+  },
+  {
     "file": "cheesecake-whole",
     "orientation": "portrait",
     "pairGroup": null,
@@ -175,24 +77,52 @@
     "alt": "A whole burnt Basque cheesecake on baking parchment"
   },
   {
-    "file": "michelada-pour-a",
-    "orientation": "portrait",
-    "pairGroup": null,
-    "path": "assets/images/rotation/portrait/michelada-pour-a.webp",
-    "alt": "A hand pouring beer into a chilli-rimmed michelada cup"
+    "file": "tacos-crema-pour-landscape",
+    "orientation": "landscape",
+    "pairGroup": "tacos-crema-pour",
+    "path": "assets/images/rotation/landscape/tacos-crema-pour.webp",
+    "alt": "Four tacos on a green plate, crema being poured over the top"
   },
   {
-    "file": "michelada-pour-b",
-    "orientation": "portrait",
-    "pairGroup": null,
-    "path": "assets/images/rotation/portrait/michelada-pour-b.webp",
-    "alt": "A hand pouring beer into a chilli-rimmed michelada cup"
+    "file": "mussels-overhead-landscape",
+    "orientation": "landscape",
+    "pairGroup": "mussels-overhead",
+    "path": "assets/images/rotation/landscape/mussels-overhead.webp",
+    "alt": "Mussels in broth with herbs and a lime half, overhead on an orange background"
   },
   {
-    "file": "michelada-static",
-    "orientation": "portrait",
-    "pairGroup": null,
-    "path": "assets/images/rotation/portrait/michelada-static.webp",
-    "alt": "A michelada and a bottle of Modelo beer on a dark bar top"
+    "file": "cheesecake-plated-landscape",
+    "orientation": "landscape",
+    "pairGroup": "cheesecake-plated",
+    "path": "assets/images/rotation/landscape/cheesecake-plated.webp",
+    "alt": "A slice of burnt Basque cheesecake topped with caviar, on a white plate"
+  },
+  {
+    "file": "birria-quesadilla-landscape",
+    "orientation": "landscape",
+    "pairGroup": "birria-quesadilla",
+    "path": "assets/images/rotation/landscape/birria-quesadilla.webp",
+    "alt": "Birria with quesadillas, lime and salsa verde on a metal plate"
+  },
+  {
+    "file": "jicama-slaw-landscape",
+    "orientation": "landscape",
+    "pairGroup": "jicama-slaw",
+    "path": "assets/images/rotation/landscape/jicama-slaw.webp",
+    "alt": "A chef tossing a jicama and radish slaw in a large metal bowl"
+  },
+  {
+    "file": "refried-beans-chips-landscape",
+    "orientation": "landscape",
+    "pairGroup": "refried-beans-chips",
+    "path": "assets/images/rotation/landscape/refried-beans-chips.webp",
+    "alt": "Refried beans with chives, served with tortilla chips"
+  },
+  {
+    "file": "cheesecake-held-landscape",
+    "orientation": "landscape",
+    "pairGroup": "cheesecake-held",
+    "path": "assets/images/rotation/landscape/cheesecake-held.webp",
+    "alt": "Hands holding a plate with a slice of burnt Basque cheesecake and caviar"
   }
 ]

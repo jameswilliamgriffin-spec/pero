@@ -30,27 +30,70 @@
     })
     .catch(function () { /* no manifest, sliders just stay empty */ });
 
+  function makeSlide(item) {
+    var slide = document.createElement('div');
+    slide.className = 'mobile-slider-item';
+    var img = document.createElement('img');
+    img.src = item.path;
+    img.alt = item.alt || '';
+    img.loading = 'lazy';
+    slide.appendChild(img);
+    return slide;
+  }
+
+  /* Loops in both directions with just one clone at each end: a copy of the
+     last slide before slide 1, and a copy of slide 1 after the last slide.
+     The scroller opens on real slide 1 (skipping the leading clone); once a
+     swipe settles ON a clone, it jumps — instantly, no animation — to the
+     matching real slide at the other end, so the clone is never actually
+     seen at rest, only crossed over mid-swipe. */
   function buildSlider(container, items) {
+    if (items.length < 2) {
+      // Nothing to loop with one slide — build it plain, same as before.
+      var scrollerPlain = document.createElement('div');
+      scrollerPlain.className = 'mobile-slider-scroll';
+      var trackPlain = document.createElement('div');
+      trackPlain.className = 'mobile-slider-track';
+      items.forEach(function (item) { trackPlain.appendChild(makeSlide(item)); });
+      scrollerPlain.appendChild(trackPlain);
+      container.appendChild(scrollerPlain);
+      enableDragToScroll(scrollerPlain);
+      return;
+    }
+
     var scroller = document.createElement('div');
     scroller.className = 'mobile-slider-scroll';
 
     var track = document.createElement('div');
     track.className = 'mobile-slider-track';
 
-    items.forEach(function (item) {
-      var slide = document.createElement('div');
-      slide.className = 'mobile-slider-item';
-
-      var img = document.createElement('img');
-      img.src = item.path;
-      img.alt = item.alt || '';
-      img.loading = 'lazy';
-      slide.appendChild(img);
-      track.appendChild(slide);
-    });
+    track.appendChild(makeSlide(items[items.length - 1])); // leading clone of last
+    items.forEach(function (item) { track.appendChild(makeSlide(item)); });
+    track.appendChild(makeSlide(items[0])); // trailing clone of first
 
     scroller.appendChild(track);
     container.appendChild(scroller);
+
+    var firstRealIndex = 1;
+    var lastRealIndex = items.length; // track.children.length - 2
+
+    function jumpTo(index) {
+      scroller.scrollLeft = index * scroller.clientWidth;
+    }
+    // Open on real slide 1, not the leading clone sitting before it.
+    jumpTo(firstRealIndex);
+
+    var settleTimer = null;
+    scroller.addEventListener('scroll', function () {
+      clearTimeout(settleTimer);
+      settleTimer = setTimeout(function () {
+        var width = scroller.clientWidth;
+        if (!width) return;
+        var index = Math.round(scroller.scrollLeft / width);
+        if (index <= 0) jumpTo(lastRealIndex);
+        else if (index >= lastRealIndex + 1) jumpTo(firstRealIndex);
+      }, 120);
+    }, { passive: true });
 
     enableDragToScroll(scroller);
   }

@@ -5,6 +5,7 @@ const express    = require('express');
 const multer     = require('multer');
 const cors       = require('cors');
 const path       = require('path');
+const fs         = require('fs');
 const cloudinary = require('cloudinary').v2;
 
 const app  = express();
@@ -166,6 +167,53 @@ app.post('/api/remove-menu', requireAdmin, async (req, res) => {
   } catch (err) {
     console.error('Remove failed:', err);
     res.status(500).json({ error: 'Failed to remove menu' });
+  }
+});
+
+/* ----------------------------------------
+   ROTATION MANIFEST — reorder/remove entries from the local slider-editor
+   tool. Rebuilds the manifest as [...portrait entries in the given order,
+   ...landscape entries in the given order]; array order only matters to
+   the mobile sliders (js/mobile-image-slider.js filters-and-preserves it)
+   — the desktop rotation (js/image-rotation.js) shuffles its pool every
+   time regardless of manifest order, so this can't affect that.
+   ---------------------------------------- */
+
+const MANIFEST_PATH = path.join(__dirname, 'assets/images/rotation/manifest.json');
+
+app.post('/api/update-manifest', requireAdmin, (req, res) => {
+  try {
+    const { portrait, landscape } = req.body || {};
+    if (!Array.isArray(portrait) || !Array.isArray(landscape)) {
+      return res.status(400).json({ error: 'portrait and landscape must be arrays of file ids' });
+    }
+
+    const current = JSON.parse(fs.readFileSync(MANIFEST_PATH, 'utf8'));
+    const byFile = new Map(current.map((entry) => [entry.file, entry]));
+
+    function resolve(ids, orientation) {
+      const out = [];
+      for (const id of ids) {
+        const entry = byFile.get(id);
+        if (!entry || entry.orientation !== orientation) return null;
+        out.push(entry);
+      }
+      return out;
+    }
+
+    const newPortrait = resolve(portrait, 'portrait');
+    const newLandscape = resolve(landscape, 'landscape');
+    if (!newPortrait || !newLandscape) {
+      return res.status(400).json({ error: 'Unknown file id, or an id had the wrong orientation' });
+    }
+
+    const updated = newPortrait.concat(newLandscape);
+    fs.writeFileSync(MANIFEST_PATH, JSON.stringify(updated, null, 2) + '\n');
+    console.log('Rotation manifest updated:', newPortrait.length, 'portrait,', newLandscape.length, 'landscape');
+    res.json({ success: true, portraitCount: newPortrait.length, landscapeCount: newLandscape.length });
+  } catch (err) {
+    console.error('update-manifest failed:', err);
+    res.status(500).json({ error: 'Failed to update manifest' });
   }
 });
 

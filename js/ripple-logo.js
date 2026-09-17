@@ -10,8 +10,11 @@
 
   var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   var canvas = document.createElement('canvas');
-  canvas.width = 192;
-  canvas.height = 32;
+  // Stretched across the full (very wide) logo by the filter's feImage, so a
+  // coarse map shows up as visible blocky/stepped edges once magnified —
+  // 4x the pixel count of the original 192x32 to keep the wave smooth.
+  canvas.width = 384;
+  canvas.height = 64;
   var context = canvas.getContext('2d');
   if (!context) return;
   var field = context.createImageData(canvas.width, canvas.height);

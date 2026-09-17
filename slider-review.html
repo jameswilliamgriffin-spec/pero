@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Slider Review</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 40px 30px 100px;
+    background: #111;
+    color: #eee;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  .sub { color: #999; font-size: 13px; margin: 0 0 10px; }
+  .removed-note { color: #ff8a65; font-size: 12px; margin: 0 0 8px; }
+  .check-note { color: #ffd400; font-size: 12px; margin: 0 0 40px; font-weight: 600; }
+  section { margin-bottom: 60px; }
+  section h2 {
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-bottom: 2px solid #444;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+  }
+  section h2 span { color: #888; font-weight: 400; text-transform: none; letter-spacing: 0; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 18px;
+  }
+  figure {
+    margin: 0;
+    background: #1c1c1c;
+    border: 1px solid #333;
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+  }
+  figure.moved { border-color: #ffd400; }
+  .thumb {
+    width: 100%;
+    height: 220px;
+    background:
+      linear-gradient(45deg, #262626 25%, transparent 25%),
+      linear-gradient(-45deg, #262626 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #262626 75%),
+      linear-gradient(-45deg, transparent 75%, #262626 75%);
+    background-size: 16px 16px;
+    background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+    background-color: #1a1a1a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .thumb img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    display: block;
+  }
+  .num {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: #ffd400;
+    color: #111;
+    font-weight: 800;
+    font-size: 15px;
+    line-height: 1;
+    padding: 5px 9px;
+    border-radius: 4px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  figcaption {
+    padding: 8px 10px 10px;
+    font-size: 11px;
+    color: #999;
+    word-break: break-all;
+  }
+  figcaption .was { color: #666; }
+  figcaption .moved-tag { color: #ffd400; }
+</style>
+</head>
+<body>
+
+<h1>Mobile Image Slider Review — v3</h1>
+<p class="sub">Generated from assets/images/rotation/manifest.json — numbers match each image's NEW position if these changes are applied. Nothing in the site has been changed yet.</p>
+<p class="removed-note">Slider 1 (portrait) this round: removed old #2 (mussels-overhead-portrait); removed old #1 (tacos-crema-pour-portrait) from its spot and moved old #8 (oyster-martini) into position 1 instead. Slider 2 (landscape): unchanged from last review.</p>
+<p class="check-note">⚠ That last instruction was ambiguous — double-check position 1 below is the image you meant.</p>
+
+<section>
+  <h2>Slider 1 — Portrait <span id="count-1"></span></h2>
+  <div class="grid" id="grid-portrait"></div>
+</section>
+
+<section>
+  <h2>Slider 2 — Landscape <span id="count-2"></span></h2>
+  <div class="grid" id="grid-landscape"></div>
+</section>
+
+<script>
+  // Original (very first review) numbers kept via "was" for cross-checking.
+  var portrait = [
+    { file: "oyster-martini", path: "assets/images/food/IMG_3430.jpg", was: 8, moved: true },
+    { file: "cheesecake-plated-portrait", path: "assets/images/rotation/portrait/cheesecake-plated.webp", was: 3 },
+    { file: "birria-quesadilla-portrait", path: "assets/images/rotation/portrait/birria-quesadilla.webp", was: 4 },
+    { file: "jicama-slaw-portrait", path: "assets/images/rotation/portrait/jicama-slaw.webp", was: 5 },
+    { file: "refried-beans-chips-portrait", path: "assets/images/rotation/portrait/refried-beans-chips.webp", was: 6 },
+    { file: "cheesecake-held-portrait", path: "assets/images/rotation/portrait/cheesecake-held.webp", was: 7 },
+    { file: "tacos-lift", path: "assets/images/rotation/portrait/tacos-lift.webp", was: 10 },
+    { file: "tostada-herbs", path: "assets/images/rotation/portrait/tostada-herbs.webp", was: 11 },
+    { file: "cocktail-ice-macro", path: "assets/images/rotation/portrait/cocktail-ice-macro.webp", was: 12 },
+    { file: "negroni-green-light", path: "assets/images/rotation/portrait/negroni-green-light.webp", was: 14 },
+    { file: "roasted-potatoes", path: "assets/images/rotation/portrait/roasted-potatoes.webp", was: 15 },
+    { file: "tacos-lift-reach", path: "assets/images/rotation/portrait/tacos-lift-reach.webp", was: 16 },
+    { file: "mussels-lime-closeup", path: "assets/images/rotation/portrait/mussels-lime-closeup.webp", was: 17 },
+    { file: "cheesecake-whole", path: "assets/images/rotation/portrait/cheesecake-whole.webp", was: 18 }
+  ];
+
+  var landscape = [
+    { file: "tacos-crema-pour-landscape", path: "assets/images/rotation/landscape/tacos-crema-pour.webp", was: 1 },
+    { file: "mussels-overhead-landscape", path: "assets/images/rotation/landscape/mussels-overhead.webp", was: 2 },
+    { file: "birria-quesadilla-landscape", path: "assets/images/rotation/landscape/birria-quesadilla.webp", was: 4 },
+    { file: "jicama-slaw-landscape", path: "assets/images/rotation/landscape/jicama-slaw.webp", was: 5 },
+    { file: "refried-beans-chips-landscape", path: "assets/images/rotation/landscape/refried-beans-chips.webp", was: 6 },
+    { file: "cheesecake-held-landscape", path: "assets/images/rotation/landscape/cheesecake-held.webp", was: 7 }
+  ];
+
+  function render(list, gridId, countId) {
+    var grid = document.getElementById(gridId);
+    document.getElementById(countId).textContent = "(" + list.length + " images)";
+    list.forEach(function (item, i) {
+      var fig = document.createElement("figure");
+      if (item.moved) fig.className = "moved";
+
+      var thumb = document.createElement("div");
+      thumb.className = "thumb";
+      var img = document.createElement("img");
+      img.src = item.path;
+      img.alt = item.file;
+      thumb.appendChild(img);
+
+      var num = document.createElement("div");
+      num.className = "num";
+      num.textContent = i + 1;
+
+      var cap = document.createElement("figcaption");
+      cap.innerHTML = item.file + ' <span class="was">(was #' + item.was + ')</span>' +
+        (item.moved ? ' <span class="moved-tag">← moved here</span>' : '');
+
+      fig.appendChild(thumb);
+      fig.appendChild(num);
+      fig.appendChild(cap);
+      grid.appendChild(fig);
+    });
+  }
+
+  render(portrait, "grid-portrait", "count-1");
+  render(landscape, "grid-landscape", "count-2");
+</script>
+
+</body>
+</html>

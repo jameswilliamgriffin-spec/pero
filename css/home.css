@@ -440,6 +440,22 @@ header .navbar .nav-container .nav-item .nav-link {
   .mobile-logo-bleed { display: none; }
 }
 
+/* Between mobile (where the fixed logo band was tuned to fit) and 1070px
+   (where the hero logo takes over), the band's own width grows enough that
+   the logo image's fixed aspect ratio makes it taller than the 150px cap —
+   so it was getting clipped top and bottom by this box's overflow:hidden,
+   sitting right up against the header with no breathing room. Raise the cap
+   so the full logo fits, and nudge it down slightly for clearance — main's
+   own clearance padding (above) is widened to match so nothing overlaps
+   below it either. */
+@media (min-width: 768px) and (max-width: 1069.98px) {
+  .mobile-logo-bleed {
+    top: calc(var(--header-h, 80px) + 16px);
+    max-height: 190px;
+  }
+  main { padding-top: calc(var(--header-h, 80px) + 16px + clamp(90px, 24vw, 190px)); }
+}
+
 @media (max-width: 767.98px) {
   .hero-top-divider.pt-80 { padding-top: 60px; }
   .pre-footer-divider.pt-80 { padding-top: 40px; }
@@ -876,7 +892,7 @@ footer {
 @media (max-width: 767.98px) {
   .footer-nav {
     flex-wrap: nowrap;
-    gap: clamp(16px, 5vw, 22px);
+    gap: clamp(22px, 7vw, 30px);
     padding: 0 16px;
     font-size: 15px;
   }
@@ -964,7 +980,7 @@ footer {
   .saturation-knob {
     left: 50%;
     right: auto;
-    bottom: 32px;
+    bottom: 42px;
     transform: translateX(-50%);
   }
   .saturation-knob__dial { width: 60px; height: 60px; }
@@ -1145,6 +1161,17 @@ body::after {
   max-width: 900px;
   height: auto;
   box-shadow: 0 4px 40px rgba(0, 0, 0, 0.35);
+  /* Starts hidden — the src attribute in the HTML is a bundled fallback
+     that's often stale, so js/menu-upload.js only reveals this once it's
+     confirmed (and, for the live preview, actually finished loading) what
+     should really be shown. Without this, the stale fallback flashes on
+     screen for the fraction of a second the fetch takes. */
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+.menu-image.is-ready { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .menu-image { transition: none; }
 }
 
 /* ---------- faq page ---------- */
