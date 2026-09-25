@@ -39,6 +39,7 @@
   cursor: pointer;
 }
 .theme-toggle.is-hidden { display: none; }
+.theme-toggle:focus-visible { outline: 2px solid var(--color-fg); outline-offset: 4px; }
 @media (min-width: 768px) {
   .theme-toggle { top: 30px; right: 30px; }
 }
@@ -414,6 +415,7 @@ main::before {
   align-items: center;
   cursor: pointer;
 }
+.tex-switch:focus-visible { outline: 2px solid var(--footer-fg); outline-offset: 4px; }
 .tex-switch__track {
   width: 68px;
   height: 34px;

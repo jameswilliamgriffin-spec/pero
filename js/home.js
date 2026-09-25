@@ -489,7 +489,12 @@
     idleTimeoutId = setTimeout(showFlame, time);
   }
 
-  if (flameContainer) {
+  // The whole feature only ever triggers after a 15s+ loss of window
+  // focus, so gating it here (rather than inside startFlame's own RAF
+  // loop) means a reduced-motion visitor never gets the idle overlay at
+  // all, instead of having it appear inert — same "just don't run this"
+  // pattern ripple-logo.js and faq.js already use.
+  if (flameContainer && !reducedMotion.matches) {
     document.addEventListener('click', function (event) {
       if (event.target.closest('.container-pre')) {
         flameContainer.classList.remove('show');
