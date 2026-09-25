@@ -25,10 +25,19 @@
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
   <filter id="logo-ripple-filter" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB">
-    <feTurbulence type="fractalNoise" baseFrequency="0.012 0.08" numOctaves="2" seed="7" stitchTiles="stitch" result="noise" />
-    <feImage id="logo-ripple-mask" preserveAspectRatio="none" result="mask" />
-    <feComposite in="noise" in2="mask" operator="arithmetic" k1="1" k2="0" k3="0" k4="0" result="maskedNoise" />
-    <feDisplacementMap id="logo-ripple-displace" in="SourceGraphic" in2="maskedNoise" scale="0" xChannelSelector="R" yChannelSelector="G" />
+    <feImage id="logo-wave-map" x="-15%" y="-15%" width="130%" height="130%" preserveAspectRatio="none" result="wave" />
+    <feDisplacementMap id="logo-ripple-displace" in="SourceGraphic" in2="wave" scale="0" xChannelSelector="R" yChannelSelector="G" result="displaced" />
+    <!-- A touch of chromatic aberration at the ripple's peak: split the
+         displaced image into its R/G/B channels, nudge red and blue apart
+         by an amount driven by the same hover envelope, recombine with
+         screen so it reconstructs cleanly at rest (dx/dy = 0). -->
+    <feColorMatrix in="displaced" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="rOnly" />
+    <feColorMatrix in="displaced" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="gOnly" />
+    <feColorMatrix in="displaced" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="bOnly" />
+    <feOffset id="logo-ripple-r-offset" in="rOnly" dx="0" dy="0" result="rOffset" />
+    <feOffset id="logo-ripple-b-offset" in="bOnly" dx="0" dy="0" result="bOffset" />
+    <feBlend in="rOffset" in2="gOnly" mode="screen" result="rg" />
+    <feBlend in="rg" in2="bOffset" mode="screen" />
   </filter>
 </svg>
 
