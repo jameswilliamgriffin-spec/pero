@@ -10,3 +10,4 @@ npm-debug.log*
 dist/
 build/
 .cache/
+design-src/_preview.png

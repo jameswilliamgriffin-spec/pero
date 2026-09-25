@@ -171,6 +171,29 @@
     });
   }
 
+  /* ----------------------------------------
+     TEXTURE SWITCH — footer switch, off (default) / on, persisted.
+     Just flips an attribute the .tex CSS reads; no wipe transition, this
+     one's decorative-only so an instant fade reads fine.
+     ---------------------------------------- */
+
+  var TEX_KEY = 'perro-tex';
+  var texSwitch = document.getElementById('texToggle');
+  if (texSwitch) {
+    var texOn = document.documentElement.getAttribute('data-tex') === 'on';
+    texSwitch.setAttribute('aria-checked', String(texOn));
+    texSwitch.addEventListener('click', function () {
+      texOn = !texOn;
+      if (texOn) {
+        document.documentElement.setAttribute('data-tex', 'on');
+      } else {
+        document.documentElement.removeAttribute('data-tex');
+      }
+      try { localStorage.setItem(TEX_KEY, texOn ? 'on' : 'off'); } catch (e) {}
+      texSwitch.setAttribute('aria-checked', String(texOn));
+    });
+  }
+
   /* Internal page links share the theme wipe without changing the theme. */
   document.addEventListener('click', function (event) {
     if (event.defaultPrevented || event.button !== 0 ||

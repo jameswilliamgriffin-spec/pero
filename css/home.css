@@ -152,7 +152,7 @@ main::before {
   inset: 0;
   pointer-events: none;
   display: none;
-  background-image: url("../assets/images/background-texture.png");
+  background-image: url("../assets/images/background-texture.webp");
   background-repeat: repeat;
   filter: invert(1);
   mix-blend-mode: screen;
