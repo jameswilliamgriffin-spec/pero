@@ -461,6 +461,22 @@ img { max-width: 100%; }
   position: absolute;
 }
 
+/* Visually hidden but still in the accessibility tree and reachable —
+   unlike .visibility-hidden above, which removes it from both. Used for
+   a real <h1> that documents each page's own visual wordmark without
+   changing anything on screen. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* ---------- grid (only what the page uses) ---------- */
 
 .container-fluid {
