@@ -8,7 +8,6 @@ Static site + small Express API for Taqueria/Perro (Kings Heath, Birmingham). Pl
 - `menu.html` — menu (PDF download + JPEG preview, both kept in sync by the admin upload)
 - `faq.html` — FAQ
 - `admin.html` — password-protected menu management (upload/remove the menu PDF)
-- `dog-options.html` — internal, unlinked design-review page (not part of the public site; consider removing before launch if you don't want it publicly reachable)
 
 Header/footer markup is duplicated across `index.html`, `menu.html`, and `faq.html` (no shared template/build step) — a change to one (nav links, footer, etc.) needs to be repeated in the others.
 
@@ -52,5 +51,4 @@ None of these are hardcoded in the codebase — `server.js` reads them all from 
 
 ## Known gaps / things to double check before going live
 
-- `dog-options.html` isn't linked from anywhere but is publicly reachable at `/dog-options.html` once deployed — remove it or leave it, your call.
-- A handful of large, unused prototype images live under `assets/images/` (leftover from scrapped features) and were left in place by request — see the audit summary for exact paths if you want to delete them to shrink the deploy bundle.
+- The rotation manifest (`assets/images/rotation/manifest.json`) used to be reorderable via a local `slider-editor.html` tool. That tool (and its read-only `slider-review.html` companion) was removed as part of a cleanup pass — it wasn't linked from the public site but was publicly reachable, and reordering the manifest by hand is straightforward if needed again.
