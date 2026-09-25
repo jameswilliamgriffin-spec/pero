@@ -90,8 +90,13 @@
         var width = scroller.clientWidth;
         if (!width) return;
         var index = Math.round(scroller.scrollLeft / width);
-        if (index <= 0) jumpTo(lastRealIndex);
-        else if (index >= lastRealIndex + 1) jumpTo(firstRealIndex);
+        if (index <= 0) index = lastRealIndex;
+        else if (index >= lastRealIndex + 1) index = firstRealIndex;
+        // Re-snap exactly even when landing on a real slide, not just when
+        // wrapping off a clone — real-device momentum scrolling can settle
+        // a couple of px short of the true snap point, which shows up as a
+        // sliver of the neighbouring slide still visible at rest.
+        if (Math.abs(scroller.scrollLeft - index * width) > 0.5) jumpTo(index);
       }, 120);
     }, { passive: true });
 
