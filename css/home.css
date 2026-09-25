@@ -853,21 +853,23 @@ header .submenu a {
   display: block;
   position: relative;
 }
-.img-wrapper img {
+.img-wrapper :is(img, video) {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-/* Crops 5px off the right edge of the animated gif specifically — widening
-   the image past its wrapper's right edge and letting .asp-1's own
-   overflow:hidden clip it, rather than touching the shared .img-wrapper
-   img rule every other photo on the site also uses. Specificity needs to
-   beat the later .asp-1 img rule (same "class + element" weight) below,
-   which would otherwise reset this back to width:100% at 768px+ — and the
-   site-wide `img { max-width: 100% }` reset needs overriding too, or it
-   clamps this straight back down regardless of the width set here. */
-.gif-slot .img-wrapper img {
+/* Crops 5px off the right edge of the animated gif-slot loop specifically
+   (originally a GIF, now a muted looping <video> — the selector covers
+   both) — widening the image past its wrapper's right edge and letting
+   .asp-1's own overflow:hidden clip it, rather than touching the shared
+   .img-wrapper img rule every other photo on the site also uses.
+   Specificity needs to beat the later .asp-1 img rule (same "class +
+   element" weight) below, which would otherwise reset this back to
+   width:100% at 768px+ — and the site-wide `img { max-width: 100% }`
+   reset needs overriding too, or it clamps this straight back down
+   regardless of the width set here. */
+.gif-slot .img-wrapper :is(img, video) {
   width: calc(100% + 5px);
   max-width: none;
 }
@@ -902,7 +904,7 @@ header .submenu a {
   .rotate-layer { transition: none; }
 }
 
-.hover-food .img-wrapper img {
+.hover-food .img-wrapper :is(img, video) {
   transition: transform 0.3s cubic-bezier(0.38, 0.005, 0.215, 1);
 }
 
@@ -994,7 +996,7 @@ header .submenu a {
   }
 }
 @media (min-width: 1070px) {
-  .hover-food:hover .img-wrapper img { transform: scale(1.05); }
+  .hover-food:hover .img-wrapper :is(img, video) { transform: scale(1.05); }
 }
 
 /* ---------- scroll-in animations ---------- */

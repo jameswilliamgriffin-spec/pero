@@ -508,6 +508,29 @@
   }
 
   /* ----------------------------------------
+     GIF-SLOT VIDEO — belt-and-braces autoplay. muted+autoplay+playsinline
+     already covers this everywhere it matters, but some browsers only
+     honour autoplay once the tab is genuinely visible/focused, and can
+     silently leave it paused at load. Retrying on load and on first
+     interaction is a harmless no-op wherever native autoplay already
+     worked (.play() on a playing video just resolves immediately).
+     ---------------------------------------- */
+  var gifSlotVideo = document.querySelector('.gif-slot video');
+  if (gifSlotVideo) {
+    var tryPlayGifVideo = function () {
+      if (gifSlotVideo.paused) gifSlotVideo.play().catch(function () {});
+    };
+    tryPlayGifVideo();
+    window.addEventListener('load', tryPlayGifVideo);
+    document.addEventListener('visibilitychange', function () {
+      if (!document.hidden) tryPlayGifVideo();
+    });
+    ['pointerdown', 'touchstart', 'keydown'].forEach(function (evt) {
+      document.addEventListener(evt, tryPlayGifVideo, { once: true, passive: true });
+    });
+  }
+
+  /* ----------------------------------------
      CONSOLE STAMP
      ---------------------------------------- */
 
