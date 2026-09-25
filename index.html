@@ -16,6 +16,9 @@
       if (localStorage.getItem('perro-theme') === 'light') {
         document.documentElement.setAttribute('data-theme', 'light');
       }
+      if (localStorage.getItem('perro-tex') === 'on') {
+        document.documentElement.setAttribute('data-tex', 'on');
+      }
     } catch (e) {}
   </script>
 </head>
@@ -25,7 +28,18 @@
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
   <filter id="logo-ripple-filter" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB">
     <feImage id="logo-wave-map" x="-15%" y="-15%" width="130%" height="130%" preserveAspectRatio="none" result="wave" />
-    <feDisplacementMap id="logo-ripple-displace" in="SourceGraphic" in2="wave" scale="0" xChannelSelector="R" yChannelSelector="G" />
+    <feDisplacementMap id="logo-ripple-displace" in="SourceGraphic" in2="wave" scale="0" xChannelSelector="R" yChannelSelector="G" result="displaced" />
+    <!-- A touch of chromatic aberration at the ripple's peak: split the
+         displaced image into its R/G/B channels, nudge red and blue apart
+         by an amount driven by the same hover envelope, recombine with
+         screen so it reconstructs cleanly at rest (dx/dy = 0). -->
+    <feColorMatrix in="displaced" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="rOnly" />
+    <feColorMatrix in="displaced" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="gOnly" />
+    <feColorMatrix in="displaced" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="bOnly" />
+    <feOffset id="logo-ripple-r-offset" in="rOnly" dx="0" dy="0" result="rOffset" />
+    <feOffset id="logo-ripple-b-offset" in="bOnly" dx="0" dy="0" result="bOffset" />
+    <feBlend in="rOffset" in2="gOnly" mode="screen" result="rg" />
+    <feBlend in="rg" in2="bOffset" mode="screen" />
   </filter>
 </svg>
 
@@ -62,7 +76,7 @@
           </li>
 
           <li class="nav-item">
-            <a href="https://www.google.com/maps/place/Perro/@52.4333654,-1.8982269,16z/data=!4m10!1m2!2m1!1sUnit+2+Kings+Court,+High+Street,+Kings+Heath,+Birmingham+B14+7JZ!3m6!1s0x4870bd4d0a9d3355:0x411e44e5193675cf!8m2!3d52.4352009!4d-1.8930399!15sCkBVbml0IDIgS2luZ3MgQ291cnQsIEhpZ2ggU3RyZWV0LCBLaW5ncyBIZWF0aCwgQmlybWluZ2hhbSBCMTQgN0paWj8iPXVuaXQgMiBraW5ncyBjb3VydCBoaWdoIHN0cmVldCBraW5ncyBoZWF0aCBiaXJtaW5naGFtIGIxNCA3anqSARJtZXhpY2FuX3Jlc3RhdXJhbnTgAQA!16s%2Fg%2F11xklgwmsv?entry=ttu&amp;g_ep=EgoyMDI2MDkwOS4wIKXMDSoASAFQAw%3D%3D" class="nav-link ch-txt" target="_blank">
+            <a href="https://www.google.com/maps/place/Perro/@52.4333654,-1.8982269,16z/data=!4m10!1m2!2m1!1sUnit+2+Kings+Court,+High+Street,+Kings+Heath,+Birmingham+B14+7JZ!3m6!1s0x4870bd4d0a9d3355:0x411e44e5193675cf!8m2!3d52.4352009!4d-1.8930399!15sCkBVbml0IDIgS2luZ3MgQ291cnQsIEhpZ2ggU3RyZWV0LCBLaW5ncyBIZWF0aCwgQmlybWluZ2hhbSBCMTQgN0paWj8iPXVuaXQgMiBraW5ncyBjb3VydCBoaWdoIHN0cmVldCBraW5ncyBoZWF0aCBiaXJtaW5naGFtIGIxNCA3anqSARJtZXhpY2FuX3Jlc3RhdXJhbnTgAQA!16s%2Fg%2F11xklgwmsv?entry=ttu&amp;g_ep=EgoyMDI2MDkwOS4wIKXMDSoASAFQAw%3D%3D" class="nav-link ch-txt" target="_blank" rel="noopener">
               ( Location )
             </a>
           </li>
@@ -83,10 +97,10 @@
 
         <a href="faq.html" target="_self">( FAQ )</a>
 
-        <a href="https://www.google.com/maps/place/Perro/@52.4333654,-1.8982269,16z/data=!4m10!1m2!2m1!1sUnit+2+Kings+Court,+High+Street,+Kings+Heath,+Birmingham+B14+7JZ!3m6!1s0x4870bd4d0a9d3355:0x411e44e5193675cf!8m2!3d52.4352009!4d-1.8930399!15sCkBVbml0IDIgS2luZ3MgQ291cnQsIEhpZ2ggU3RyZWV0LCBLaW5ncyBIZWF0aCwgQmlybWluZ2hhbSBCMTQgN0paWj8iPXVuaXQgMiBraW5ncyBjb3VydCBoaWdoIHN0cmVldCBraW5ncyBoZWF0aCBiaXJtaW5naGFtIGIxNCA3anqSARJtZXhpY2FuX3Jlc3RhdXJhbnTgAQA!16s%2Fg%2F11xklgwmsv?entry=ttu&amp;g_ep=EgoyMDI2MDkwOS4wIKXMDSoASAFQAw%3D%3D" target="_blank">( Location )</a>
+        <a href="https://www.google.com/maps/place/Perro/@52.4333654,-1.8982269,16z/data=!4m10!1m2!2m1!1sUnit+2+Kings+Court,+High+Street,+Kings+Heath,+Birmingham+B14+7JZ!3m6!1s0x4870bd4d0a9d3355:0x411e44e5193675cf!8m2!3d52.4352009!4d-1.8930399!15sCkBVbml0IDIgS2luZ3MgQ291cnQsIEhpZ2ggU3RyZWV0LCBLaW5ncyBIZWF0aCwgQmlybWluZ2hhbSBCMTQgN0paWj8iPXVuaXQgMiBraW5ncyBjb3VydCBoaWdoIHN0cmVldCBraW5ncyBoZWF0aCBiaXJtaW5naGFtIGIxNCA3anqSARJtZXhpY2FuX3Jlc3RhdXJhbnTgAQA!16s%2Fg%2F11xklgwmsv?entry=ttu&amp;g_ep=EgoyMDI2MDkwOS4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener">( Location )</a>
 
         <div class="header-social pt-15">
-          ( <a target="_blank" class="ch-txt" href="https://www.instagram.com/perro.bhx/?hl=en">IG</a> )
+          ( <a target="_blank" rel="noopener" class="ch-txt" href="https://www.instagram.com/perro.bhx/?hl=en">IG</a> )
         </div>
       </div>
     </div>
@@ -108,7 +122,8 @@
 
 <main class="page-home">
   <div class="container-fluid px-30">
-    <div class="row pt-80 pt-md-100 justify-content-center hero-top-divider">
+    <div class="row pt-80 pt-md-100 justify-content-center hero-top-divider tex-anchor">
+      <div class="tex tex-barbedwire tex-pos-hero" aria-hidden="true"></div>
       <div class="col-12">
         <div class="divider-dot"></div>
       </div>
@@ -126,7 +141,7 @@ Kings court, kings heath, B14 7JZ</div>
     <div class="row pt-30 pt-md-40">
       <div class="col-12">
         <div class="row">
-          <div class="col-12 col-md-7 col-lg-4 animate-on-scroll">
+          <div class="col-12 col-md-7 col-lg-4 animate-on-scroll tex-anchor">
             <p>[ Info ]</p>
             <p class="pt-20">Sharing plates, strong margaritas and<br class="break-lg">
 Mexican-leaning flavours in the heart<br class="break-lg"> of Kings Heath.</p>
@@ -135,8 +150,10 @@ Mexican-leaning flavours in the heart<br class="break-lg"> of Kings Heath.</p>
               [ Social ]
             </p>
             <div class="d-flex pl-30 pl-md-50">
-              <a class="ch-txt" href="https://www.instagram.com/perro.bhx/?hl=en" target="_blank">( IG )</a>
+              <a class="ch-txt" href="https://www.instagram.com/perro.bhx/?hl=en" target="_blank" rel="noopener">( IG )</a>
             </div>
+            <div class="tex tex-crosshair tex--accent tex-pos-info" aria-hidden="true"></div>
+            <div class="tex tex-barbedwire tex-pos-info-top" aria-hidden="true"></div>
           </div>
 
           <div class="col-12 col-md-4 col-lg-3 pl-md-0 pl-lg-15 ml-auto pt-30 gif-slot">
@@ -146,7 +163,10 @@ Mexican-leaning flavours in the heart<br class="break-lg"> of Kings Heath.</p>
               </picture>
             </div>
           </div>
-          <div class="col-12 pt-md-30 pt-lg-0"></div>
+          <div class="col-12 pt-md-30 pt-lg-0 tex-anchor">
+            <div class="tex tex-xxxx tex-pos-spacer" aria-hidden="true"></div>
+            <div class="tex tex-barbedwire tex-pos-spacer-wire" aria-hidden="true"></div>
+          </div>
 
           <div class="mobile-portrait-slider d-md-none" data-slider-orientation="portrait" aria-label="Food photos, portrait"></div>
           <div class="mobile-landscape-slider d-md-none" data-slider-orientation="landscape" aria-label="Food photos, landscape"></div>
@@ -182,8 +202,10 @@ Mexican-leaning flavours in the heart<br class="break-lg"> of Kings Heath.</p>
         </div>
       </div>
     </div>
-    <div class="col-12 pt-80 pt-md-100 pt-lg-135 pre-footer-divider">
+    <div class="col-12 pt-80 pt-md-100 pt-lg-135 pre-footer-divider tex-anchor">
       <div class="divider-dot"></div>
+      <div class="tex tex-halftone tex--faint tex-pos-prefooter-a" aria-hidden="true"></div>
+      <div class="tex tex-gridsmudge tex-pos-prefooter-b" aria-hidden="true"></div>
     </div>
   </div>
   <div class="container-pre px-15 px-md-30">
@@ -208,23 +230,34 @@ Mexican-leaning flavours in the heart<br class="break-lg"> of Kings Heath.</p>
 </div>
 
 <footer>
-  <div class="saturation-knob" aria-hidden="true">
-    <div class="saturation-knob__hit">
-      <svg class="saturation-knob__dial" viewBox="0 0 40 40" width="40" height="40">
-        <circle class="saturation-knob__track" cx="20" cy="20" r="16" />
-        <path class="saturation-knob__arc" d=""></path>
-        <line class="saturation-knob__pointer" x1="20" y1="20" x2="20" y2="9" />
-      </svg>
+  <div class="footer-controls">
+    <div class="saturation-knob" aria-hidden="true">
+      <div class="saturation-knob__hit">
+        <svg class="saturation-knob__dial" viewBox="0 0 40 40" width="40" height="40">
+          <circle class="saturation-knob__track" cx="20" cy="20" r="16" />
+          <path class="saturation-knob__arc" d=""></path>
+          <line class="saturation-knob__pointer" x1="20" y1="20" x2="20" y2="9" />
+        </svg>
+      </div>
+      <div class="saturation-knob__value">100</div>
     </div>
-    <div class="saturation-knob__value">100</div>
+    <button type="button" id="texToggle" class="tex-switch" role="switch" aria-checked="false" aria-label="Toggle background texture">
+      <svg class="tex-switch__track" viewBox="0 0 40 20" width="40" height="20" aria-hidden="true">
+        <rect x="1.5" y="1.5" width="37" height="17" rx="8.5" />
+        <circle class="tex-switch__thumb" cx="10" cy="10" r="6.5" />
+      </svg>
+    </button>
   </div>
+  <div class="tex tex-barcode tex-pos-footer-barcode" aria-hidden="true"></div>
   <div class="footer-black">
+    <div class="tex tex-scratch tex-pos-footer-band" aria-hidden="true"></div>
+    <div class="tex tex-sparkle tex-pos-footer-corner" aria-hidden="true"></div>
     <nav class="footer-nav">
       <a class="ch-txt" href="menu.html">Menu</a>
       <a class="ch-txt" href="https://booking.resdiary.com/widget/Standard/Perro/62717?utm_source=ig&amp;utm_medium=social&amp;utm_content=link_in_bio&amp;fbclid=PAcGRvZgJleHRuA2FlbQIxMQBzcnRjBmFwcF9pZA85MzY2MTk3NDMzOTI0NTkAAadMfv6LZvqKgCAAJj1WRfeI-OoyWoDMJLTXB_LsNaTdyxFVPye0tW4mMnxuGg_aem_HV9KHA7Fn1s6rLRen4JtEA&amp;utm_id=97760_v0_s00_e0_tv3" target="_blank" rel="noopener">Booking</a>
       <a class="ch-txt" href="faq.html">FAQ</a>
-      <a class="ch-txt" href="https://www.google.com/maps/place/Perro/@52.4333654,-1.8982269,16z/data=!4m10!1m2!2m1!1sUnit+2+Kings+Court,+High+Street,+Kings+Heath,+Birmingham+B14+7JZ!3m6!1s0x4870bd4d0a9d3355:0x411e44e5193675cf!8m2!3d52.4352009!4d-1.8930399!15sCkBVbml0IDIgS2luZ3MgQ291cnQsIEhpZ2ggU3RyZWV0LCBLaW5ncyBIZWF0aCwgQmlybWluZ2hhbSBCMTQgN0paWj8iPXVuaXQgMiBraW5ncyBjb3VydCBoaWdoIHN0cmVldCBraW5ncyBoZWF0aCBiaXJtaW5naGFtIGIxNCA3anqSARJtZXhpY2FuX3Jlc3RhdXJhbnTgAQA!16s%2Fg%2F11xklgwmsv?entry=ttu&amp;g_ep=EgoyMDI2MDkwOS4wIKXMDSoASAFQAw%3D%3D" target="_blank">Location</a>
-      <a class="ch-txt" href="https://www.instagram.com/perro.bhx/?hl=en" target="_blank">IG</a>
+      <a class="ch-txt" href="https://www.google.com/maps/place/Perro/@52.4333654,-1.8982269,16z/data=!4m10!1m2!2m1!1sUnit+2+Kings+Court,+High+Street,+Kings+Heath,+Birmingham+B14+7JZ!3m6!1s0x4870bd4d0a9d3355:0x411e44e5193675cf!8m2!3d52.4352009!4d-1.8930399!15sCkBVbml0IDIgS2luZ3MgQ291cnQsIEhpZ2ggU3RyZWV0LCBLaW5ncyBIZWF0aCwgQmlybWluZ2hhbSBCMTQgN0paWj8iPXVuaXQgMiBraW5ncyBjb3VydCBoaWdoIHN0cmVldCBraW5ncyBoZWF0aCBiaXJtaW5naGFtIGIxNCA3anqSARJtZXhpY2FuX3Jlc3RhdXJhbnTgAQA!16s%2Fg%2F11xklgwmsv?entry=ttu&amp;g_ep=EgoyMDI2MDkwOS4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener">Location</a>
+      <a class="ch-txt" href="https://www.instagram.com/perro.bhx/?hl=en" target="_blank" rel="noopener">IG</a>
     </nav>
     <div class="footer-logo-giant">
       <img src="assets/images/perro-logo-lime.svg" alt="Perro">
