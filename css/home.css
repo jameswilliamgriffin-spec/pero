@@ -127,16 +127,322 @@ a:hover {
    hides on every page (see the rule further down) so no extra clearance is
    needed there either. */
 main {
+  position: relative;
   opacity: 0;
   padding-top: calc(var(--header-h, 80px) + clamp(90px, 24vw, 150px));
   transition: opacity 550ms cubic-bezier(0.65, 0, 0.35, 1);
 }
 main.is-loaded { opacity: 1; }
+
+/* Testing a repeatable background texture on the main content area only —
+   footer keeps its own plain --footer-bg, untouched. A pseudo-element
+   rather than main's own background-image, matching how the print-grain
+   overlay works (body::after), since that's the only way to give the
+   texture its own independent opacity without touching main's real content.
+
+   The source PNG is a low-alpha BLACK grain — reads fine as a subtle
+   darkening on the light theme's lime background, but a black-on-black
+   texture is close to invisible against the dark theme's near-black
+   background no matter the blend mode, since there's no lightness to work
+   with. So dark mode inverts it to a light grain instead and switches to a
+   lightening blend (screen) rather than a darkening one (multiply). */
+main::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: none;
+  background-image: url("../assets/images/background-texture.png");
+  background-repeat: repeat;
+  filter: invert(1);
+  mix-blend-mode: screen;
+  opacity: 0.06;
+}
+/* Tied to the same footer switch as the grunge sprite pieces below — both
+   are "the images"; body::after's print-grain stays on regardless, since
+   that's the site's base noise, not part of what the switch controls. */
+:root[data-tex="on"] main::before {
+  display: block;
+}
+:root[data-theme="light"] main::before {
+  filter: none;
+  mix-blend-mode: multiply;
+  opacity: 0.15;
+}
 @media (prefers-reduced-motion: reduce) {
   main { transition: none; }
 }
 @media (min-width: 1070px) {
   main { padding-top: 0; }
+}
+
+/* ---------- grunge sprite textures (.tex) ---------- */
+/* Decorative only — every piece is aria-hidden in the markup and carries
+   no meaning. Sources are alpha-only WebP masks (see
+   scripts/crop-sprites.py); background-color paints the shape, so the
+   same file works in both themes and only --tex-ink/--tex-blend/
+   --tex-opacity need to flip — same reasoning as main::before's grain
+   layer just above: light ink + screen lifts off the dark theme's
+   near-black bg, dark ink + multiply sits into the light theme's lime bg.
+
+   Each piece is z-index:-1 so it paints behind its anchor's real content
+   (text, nav links, logo) without needing to be careful about DOM order.
+   .tex-anchor's isolation keeps that negative z-index contained to just
+   that one anchor instead of leaking into the page's wider stacking order. */
+.tex-anchor {
+  position: relative;
+  isolation: isolate;
+}
+/* The two anchors whose pieces bleed past their own edge (barbed-wire,
+   halftone-patch, grid-smudge) clip locally rather than via overflow-x on
+   body/html — the sticky header logo (.sticky-home) relies on the
+   viewport itself being the scrolling element, and forcing a non-visible
+   overflow-x anywhere up that chain flips overflow-y to auto too and
+   breaks that. Clipping at the row itself avoids touching the page's
+   scroll container at all, and still reads as edge-bleed since these full-
+   width rows already sit within ~30px of the real viewport edge. */
+.hero-top-divider,
+.pre-footer-divider {
+  overflow: hidden;
+}
+/* .tex[aria-hidden] rather than plain .tex: every piece already carries
+   aria-hidden="true" by the "decorative only" contract above, and the
+   extra attribute selector bumps specificity past the grid's own
+   ".row > *" utility (position:relative; width:100%) — same specificity,
+   later in the cascade, so a plain .tex would silently lose position:
+   absolute and each placement's width for any piece that's a direct
+   child of a .row (e.g. tex-pos-hero inside .hero-top-divider). */
+.tex[aria-hidden] {
+  position: absolute;
+  z-index: -1;
+  display: block;
+  pointer-events: none;
+  -webkit-mask-image: var(--tex-src);
+  mask-image: var(--tex-src);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  background-color: var(--tex-ink);
+  mix-blend-mode: var(--tex-blend);
+  opacity: var(--tex-opacity);
+}
+/* Off by default. Needs to beat .tex[aria-hidden]'s own display:block
+   (0,2,0) — :root:not([data-tex="on"]) .tex[aria-hidden] is 0,4,0, so it
+   wins regardless of source order; drops out entirely once data-tex="on"
+   is set, falling back to the base rule's display:block. */
+:root:not([data-tex="on"]) .tex[aria-hidden] { display: none; }
+
+:root:not([data-theme="light"]) .tex {
+  --tex-ink: #EDEAE3;
+  --tex-blend: screen;
+  --tex-opacity: 0.08;
+}
+:root[data-theme="light"] .tex {
+  --tex-ink: #1C1917;
+  --tex-blend: multiply;
+  --tex-opacity: 0.12;
+}
+/* halftone-patch reads best large and very faint, more ambient wash than
+   legible mark. Matched to the theme rules' own specificity
+   (:root(:not)[data-theme] .tex) above — a plain .tex--faint class loses
+   the cascade to that more specific selector regardless of source order. */
+:root:not([data-theme="light"]) .tex--faint { --tex-opacity: 0.045; }
+:root[data-theme="light"] .tex--faint { --tex-opacity: 0.07; }
+/* one piece (crosshair) tinted with the site accent instead of neutral
+   ink, kept low so it stays texture rather than a second logo mark */
+:root:not([data-theme="light"]) .tex--accent { --tex-ink: var(--color-fg); --tex-opacity: 0.06; }
+:root[data-theme="light"] .tex--accent { --tex-ink: var(--color-fg); --tex-opacity: 0.06; }
+
+/* shapes — mask source + native aspect ratio only; size/position/rotation
+   come from the placement classes below so the same shape can be reused
+   at different scales */
+.tex-barcode    { --tex-src: url("../assets/textures/barcode-00240.webp");      aspect-ratio: 249 / 93; }
+.tex-crosshair  { --tex-src: url("../assets/textures/crosshair.webp");          aspect-ratio: 113 / 143; }
+.tex-halftone   { --tex-src: url("../assets/textures/halftone-patch.webp");     aspect-ratio: 260 / 124; }
+.tex-barbedwire { --tex-src: url("../assets/textures/barbed-wire.webp");        aspect-ratio: 444 / 63; }
+.tex-xxxx       { --tex-src: url("../assets/textures/xxxx.webp");               aspect-ratio: 305 / 64; }
+.tex-gridsmudge { --tex-src: url("../assets/textures/grid-smudge.webp");        aspect-ratio: 260 / 138; }
+.tex-scratch    { --tex-src: url("../assets/textures/scratch-lines.webp");      aspect-ratio: 415 / 71; }
+.tex-sparkle    { --tex-src: url("../assets/textures/sparkle-crosshairs.webp"); aspect-ratio: 141 / 106; }
+
+/* page-background placement — asymmetric, never mirrored left/right, kept
+   clear of copy: the hero row's own margin, the info column's empty space
+   below its shorter content, the spacer row before the slider, and the
+   pre-footer divider's big empty gap.
+
+   Every rule here is compounded as .tex.tex-pos-* (not just .tex-pos-*):
+   these set `width`, which the grid's ".row > *" utility (width:100%,
+   same 0,1,0 specificity, later in the cascade) would otherwise win for
+   any piece that's a direct child of a .row, same issue as .tex[aria-
+   hidden] above. */
+/* top:70px rather than a small offset — .hero-top-divider's own box
+   starts at the very top of the page (its pt-80 padding is what pushes
+   the real divider-dot/text down), and this piece's absolute `top` isn't
+   affected by that padding, so a small offset here was landing inside the
+   padding gap under the fixed header (57px tall) instead of the visible
+   content below it. */
+.tex.tex-pos-hero {
+  top: 70px;
+  left: -16px;
+  width: 72px;
+  transform: rotate(-4deg);
+}
+/* Placed in the narrow real gap between the IG link and the rotation-grid
+   photo below it, not near the column's own bottom edge — the rotation
+   grid's first two tiles use large negative top margins (.minus-180) to
+   overlap up into this column at desktop widths, so most of the column's
+   apparent empty space below the text is actually covered by a photo. */
+.tex.tex-pos-info {
+  left: 2px;
+  top: 215px;
+  width: 34px;
+  transform: rotate(6deg);
+}
+/* a second, smaller barbed-wire scrap, opposite corner from the crosshair
+   so the two don't read as a mirrored pair */
+.tex.tex-pos-info-top {
+  right: 4%;
+  top: 2px;
+  width: 58px;
+  transform: rotate(3deg);
+}
+/* right-aligned rather than left: at desktop widths this spacer row
+   collapses to 0 height and sits right where the rotation grid's first
+   two photos overlap (see tex-pos-info above) — those photos only reach
+   to about the row's horizontal midpoint, so the right-hand side (roughly
+   matching the gif-slot column above) is the one part of this row that's
+   actually clear. */
+.tex.tex-pos-spacer {
+  top: -4px;
+  right: 2%;
+  width: 180px;
+  transform: rotate(18deg);
+}
+/* a third, small barbed-wire scrap sharing the spacer row with xxxx, far
+   enough right that the two never touch */
+.tex.tex-pos-spacer-wire {
+  top: 2px;
+  right: 20%;
+  width: 54px;
+  transform: rotate(-5deg);
+}
+.tex.tex-pos-prefooter-a {
+  bottom: -30px;
+  right: -70px;
+  width: 300px;
+  transform: rotate(-2deg);
+}
+.tex.tex-pos-prefooter-b {
+  top: -18px;
+  left: -40px;
+  width: 160px;
+  transform: rotate(5deg);
+}
+@media (max-width: 767.98px) {
+  /* below ~768px: drop about half the background pieces, scale the rest down.
+     Compounded as .tex.tex-pos-* here too — display:none needs to beat the
+     base .tex[aria-hidden] rule's display:block (0,2,0 attribute
+     selector), which a plain 0,1,0 class here would lose. */
+  .tex.tex-pos-info,
+  .tex.tex-pos-info-top,
+  .tex.tex-pos-spacer-wire,
+  .tex.tex-pos-prefooter-b { display: none; }
+  .tex.tex-pos-hero { width: 56px; left: -10px; }
+  /* mobile stacks the info column's IG link directly above this spacer
+     row with almost no gap — nudge down for clearance from it */
+  .tex.tex-pos-spacer { width: 110px; top: 10px; }
+  .tex.tex-pos-prefooter-a { width: 200px; right: -40px; bottom: -18px; }
+}
+
+/* footer placement — a torn band along the top edge, a small mark in the
+   free top corner, and the barcode near the copyright line. Kept off the
+   saturation knob (bottom-left) and the copyright text itself
+   (bottom-right) at every width. footer isn't a .row, so these don't
+   strictly need the compound bump, but it's kept for consistency with
+   the rules above. */
+.tex.tex-pos-footer-band {
+  top: -4px;
+  left: 4%;
+  width: 92%;
+  transform: rotate(-0.6deg);
+}
+.tex.tex-pos-footer-corner {
+  top: 18px;
+  left: 6%;
+  width: 60px;
+  transform: rotate(4deg);
+}
+.tex.tex-pos-footer-barcode {
+  right: 10px;
+  bottom: 32px;
+  width: 84px;
+  z-index: 1; /* footer's own child, not a .tex-anchor descendant — sits above footer-black, below the credit line/knob (z-index:2) */
+  transform: rotate(-2deg);
+}
+@media (max-width: 767.98px) {
+  /* footer keeps only the band + barcode below ~768px */
+  .tex.tex-pos-footer-corner { display: none; }
+  .tex.tex-pos-footer-band { width: 96%; }
+  .tex.tex-pos-footer-barcode { width: 64px; bottom: 60px; right: 8px; }
+}
+
+/* ---------- footer texture switch ---------- */
+/* A minimal track+thumb switch, sharing the saturation knob's own visual
+   language: a dim var(--footer-fg) outline at rest, the same hardcoded
+   brand lime (#B2C703) used by the knob's arc when "on". Textures are off
+   by default (no data-tex attribute); data-tex="on" both shows every
+   .tex piece (see the base rule near main::before) and slides the thumb. */
+.footer-controls {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  z-index: 2;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 14px;
+}
+.tex-switch {
+  background: transparent;
+  border: 0;
+  padding: 8px;
+  margin: -8px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.tex-switch__track {
+  width: 68px;
+  height: 34px;
+  display: block;
+  overflow: visible;
+}
+.tex-switch__track rect {
+  fill: none;
+  stroke: var(--footer-fg);
+  stroke-opacity: 0.25;
+  stroke-width: 2;
+}
+/* footer-fg in both states, not the knob arc's hardcoded lime — footer-bg
+   IS that lime in the default dark-site theme, so a lime-filled thumb
+   would sit invisibly on top of a lime background. footer-fg always
+   contrasts against footer-bg by construction (the pair inverts together
+   per theme), so it's the one color guaranteed to show in both themes;
+   on/off reads through opacity + slide position instead of a hue change. */
+.tex-switch__thumb {
+  fill: var(--footer-fg);
+  fill-opacity: 0.35;
+  transition: transform 200ms ease, fill-opacity 200ms ease;
+}
+.tex-switch[aria-checked="true"] .tex-switch__thumb {
+  fill-opacity: 1;
+  transform: translateX(19px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .tex-switch__thumb { transition: none; }
 }
 
 button {
@@ -184,19 +490,14 @@ img { max-width: 100%; }
   .col-md-5  { flex: 0 0 41.666667%; max-width: 41.666667%; }
   .col-md-6  { flex: 0 0 50%;        max-width: 50%; }
   .col-md-7  { flex: 0 0 58.333333%; max-width: 58.333333%; }
-  .col-md-8  { flex: 0 0 66.666667%; max-width: 66.666667%; }
   .col-md-10 { flex: 0 0 83.333333%; max-width: 83.333333%; }
-  .offset-md-2 { margin-left: 16.666667%; }
 }
 @media (min-width: 1070px) {
   .col-lg-3  { flex: 0 0 25%;        max-width: 25%; }
   .col-lg-4  { flex: 0 0 33.333333%; max-width: 33.333333%; }
   .col-lg-5  { flex: 0 0 41.666667%; max-width: 41.666667%; }
   .col-lg-6  { flex: 0 0 50%;        max-width: 50%; }
-  .col-lg-7  { flex: 0 0 58.333333%; max-width: 58.333333%; }
   .col-lg-10 { flex: 0 0 83.333333%; max-width: 83.333333%; }
-  .offset-lg-2 { margin-left: 16.666667%; }
-  .offset-lg-3 { margin-left: 25%; }
 }
 @media (min-width: 1250px) {
   .col-xl-9 { flex: 0 0 75%; max-width: 75%; }
@@ -208,11 +509,7 @@ img { max-width: 100%; }
 .d-none { display: none; }
 .flex-column { flex-direction: column; }
 .justify-content-center { justify-content: center; }
-.justify-content-end { justify-content: flex-end; }
-.justify-content-between { justify-content: space-between; }
-.align-items-start { align-items: flex-start; }
 .align-items-center { align-items: center; }
-.align-items-end { align-items: flex-end; }
 .position-relative { position: relative; }
 .text-center { text-align: center; }
 .break-lg { display: none; }
@@ -220,26 +517,15 @@ img { max-width: 100%; }
   .break-lg { display: inline; }
 }
 .ml-auto { margin-left: auto; }
-.mt-auto { margin-top: auto; }
 .gap-1 { gap: 4px; }
-.gap-3 { gap: 16px; }
 .w-100 { width: 100%; }
 .h-100 { height: 100%; }
-.h-auto { height: auto; }
 .cover { width: 100%; height: 100%; object-fit: cover; }
 
-@media (max-width: 767.98px) {
-  .order-8-sm { order: 8; }
-}
 @media (min-width: 768px) {
   .d-md-flex { display: flex; }
   .d-md-none { display: none; }
-  .justify-content-md-start { justify-content: flex-start; }
   .ml-auto-md { margin-left: auto; }
-}
-@media (min-width: 1070px) {
-  .d-lg-block { display: block; }
-  .d-lg-flex { display: flex; }
 }
 
 /* ---------- spacing utilities (px values match class names) ---------- */
@@ -248,17 +534,12 @@ img { max-width: 100%; }
 .px-30 { padding-left: 30px; padding-right: 30px; }
 .pt-15 { padding-top: 15px; }
 .pt-20 { padding-top: 20px; }
-.pt-25 { padding-top: 25px; }
 .pt-30 { padding-top: 30px; }
 .pt-35 { padding-top: 35px; }
 .pt-80 { padding-top: 80px; }
 .pb-15 { padding-bottom: 15px; }
-.pb-20 { padding-bottom: 20px; }
 .pb-30 { padding-bottom: 30px; }
-.pb-80 { padding-bottom: 80px; }
 .pl-30 { padding-left: 30px; }
-.pl-45 { padding-left: 45px; }
-.pr-20 { padding-right: 20px; }
 
 @media (min-width: 768px) {
   .px-md-30 { padding-left: 30px; padding-right: 30px; }
@@ -268,22 +549,15 @@ img { max-width: 100%; }
   .pt-md-40 { padding-top: 40px; }
   .pt-md-100 { padding-top: 100px; }
   .pb-md-30 { padding-bottom: 30px; }
-  .pb-md-100 { padding-bottom: 100px; }
   .pl-md-0 { padding-left: 0; }
   .pl-md-50 { padding-left: 50px; }
-  .pr-md-30 { padding-right: 30px; }
 }
 @media (min-width: 1070px) {
   .px-lg-30 { padding-left: 30px; padding-right: 30px; }
   .pt-lg-0 { padding-top: 0; }
-  .pt-lg-20 { padding-top: 20px; }
   .pt-lg-40 { padding-top: 40px; }
-  .pt-lg-105 { padding-top: 105px; }
   .pt-lg-135 { padding-top: 135px; }
-  .pb-lg-150 { padding-bottom: 150px; }
   .pl-lg-15 { padding-left: 15px; }
-  .pl-lg-50 { padding-left: 50px; }
-  .pr-lg-30 { padding-right: 30px; }
 }
 
 @media (min-width: 1070px) {
@@ -555,6 +829,19 @@ header .submenu a {
   object-fit: cover;
 }
 
+/* Crops 5px off the right edge of the animated gif specifically — widening
+   the image past its wrapper's right edge and letting .asp-1's own
+   overflow:hidden clip it, rather than touching the shared .img-wrapper
+   img rule every other photo on the site also uses. Specificity needs to
+   beat the later .asp-1 img rule (same "class + element" weight) below,
+   which would otherwise reset this back to width:100% at 768px+ — and the
+   site-wide `img { max-width: 100% }` reset needs overriding too, or it
+   clamps this straight back down regardless of the width set here. */
+.gif-slot .img-wrapper img {
+  width: calc(100% + 5px);
+  max-width: none;
+}
+
 .asp-1 { overflow: hidden; }
 .asp-2 { overflow: hidden; }
 @media (min-width: 768px) {
@@ -677,27 +964,7 @@ header .submenu a {
   }
 }
 @media (min-width: 1070px) {
-  .hover-food .tag-comida { opacity: 0; }
-  .hover-food:hover .tag-comida { opacity: 1; }
   .hover-food:hover .img-wrapper img { transform: scale(1.05); }
-}
-
-/* ---------- link hover treatments ---------- */
-
-.hover-num .under { position: relative; }
-.hover-num .under::before {
-  content: "";
-  position: absolute;
-  width: calc(100% - 1px);
-  height: 1px;
-  background-color: var(--color-fg);
-  top: 100%;
-  left: 2px;
-  z-index: 1;
-  opacity: 0;
-}
-@media (min-width: 1070px) {
-  .hover-num:hover .under::before { opacity: 1; }
 }
 
 /* ---------- scroll-in animations ---------- */
@@ -870,6 +1137,8 @@ footer {
   color: var(--footer-fg);
   padding-top: clamp(40px, 4.5vw, 75px);
   overflow: hidden;
+  position: relative;
+  isolation: isolate;
 }
 
 .footer-nav {
@@ -920,10 +1189,6 @@ footer {
 .footer-logo-giant.is-waving img { filter: url(#logo-ripple-filter); }
 
 .saturation-knob {
-  position: absolute;
-  left: 10px;
-  bottom: 10px;
-  z-index: 2;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -977,14 +1242,33 @@ footer {
 }
 
 @media (max-width: 767.98px) {
+  /* the wrapper's own flex/positioning is only for desktop's "sit next to
+     the knob" layout — at mobile the knob and switch split apart (knob
+     shifts up, switch drops to the credit line), so each escapes to
+     <footer>'s own positioning context individually, same trick
+     .footer-credit uses below for its year/studio spans. */
+  .footer-controls {
+    position: static;
+    display: contents;
+  }
   .saturation-knob {
+    position: absolute;
     left: 50%;
-    right: auto;
-    bottom: 42px;
+    bottom: 90px;
     transform: translateX(-50%);
   }
   .saturation-knob__dial { width: 60px; height: 60px; }
   .saturation-knob__value { font-size: 15px; }
+  .tex-switch {
+    position: absolute;
+    left: 50%;
+    bottom: 16px;
+    transform: translateX(-50%);
+  }
+  /* CSS transforms on SVG shape children resolve in the viewBox's own user
+     units, not rendered CSS pixels — the desktop translateX(19px) already
+     holds correctly at this larger rendered size, no override needed. */
+  .tex-switch__track { width: 46px; height: 23px; }
 }
 
 /* ---------- footer credit ---------- */
@@ -1048,23 +1332,6 @@ footer {
     text-align: center;
   }
 }
-.ascii-logo {
-  font-size: 11px;
-  line-height: 14.3px;
-}
-@media (min-width: 768px) {
-  .ascii-logo {
-    font-size: 14px;
-    line-height: 18.2px;
-  }
-}
-@media (min-width: 1070px) {
-  .ascii-logo {
-    font-size: 16px;
-    line-height: 20.8px;
-  }
-}
-
 /* ---------- idle ascii flame overlay ---------- */
 
 .container-pre {
