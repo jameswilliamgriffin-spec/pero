@@ -14,6 +14,7 @@
   <link rel="canonical" href="https://pero-seven.vercel.app/" />
   <link rel="icon" href="assets/images/logo.png" type="image/png">
   <link rel="stylesheet" href="css/home.css">
+  <link rel="preload" as="image" href="assets/images/perro-logo-mask.svg" media="(min-width: 1024px)">
   <script>
     try {
       if (localStorage.getItem('perro-theme') === 'light') {
@@ -22,11 +23,29 @@
       if (localStorage.getItem('perro-tex') === 'on') {
         document.documentElement.setAttribute('data-tex', 'on');
       }
+      /* Logo intro is desktop-only, once per session, and skipped under
+         reduced motion — decided here, before first paint, so anyone not
+         getting it never sees the overlay flash on screen. The actual
+         animation logic/eligibility check lives in js/logo-intro.js;
+         this only prevents the FOUC case CSS alone can't (sessionStorage
+         isn't readable from a plain media query). */
+      if (sessionStorage.getItem('perro-intro-played') === '1' ||
+          window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+          window.innerWidth < 1024) {
+        document.documentElement.setAttribute('data-skip-intro', 'true');
+      }
     } catch (e) {}
   </script>
 </head>
 
 <body class="home no-js">
+
+<div id="logoIntro" class="logo-intro" aria-hidden="true">
+  <div class="logo-intro__wrap" id="logoIntroWrap">
+    <div class="logo-intro__mask"></div>
+  </div>
+  <button type="button" class="logo-intro__skip" id="logoIntroSkip">Skip</button>
+</div>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
   <filter id="logo-ripple-filter" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB">
@@ -276,6 +295,8 @@ Mexican-leaning flavours in the heart<br class="break-lg"> of Kings Heath.</p>
 </footer>
 
 <script>document.body.classList.remove("no-js");</script>
+<script src="js/vendor/gsap.min.js"></script>
+<script src="js/logo-intro.js"></script>
 <script src="js/home.js"></script>
 <script src="js/image-rotation.js"></script>
 <script src="js/mobile-image-slider.js"></script>
