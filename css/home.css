@@ -18,10 +18,10 @@
 :root {
   --color-bg: #1C1917;
   --color-fg: #B2C703;
-  /* Fixed brand accents — unlike --color-*/--footer-*, these never flip
-     with theme (the ticker bar and the saturation knob's arc/pointer are
-     deliberately the same regardless of light/dark site theme). Named
-     here purely so the value isn't a repeated magic number. */
+  /* Fixed brand accents — unlike --color-bg/fg and --footer-bg/fg, these
+     never flip with theme (the ticker bar and the saturation knob's
+     arc/pointer are deliberately the same regardless of light/dark site
+     theme). Named here purely so the value isn't a repeated magic number. */
   --accent-lime: #B2C703;
   --accent-dark: #1C1917;
   /* The site's two recurring easing curves, previously repeated as
