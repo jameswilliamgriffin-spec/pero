@@ -619,87 +619,71 @@ img { max-width: 100%; }
   pointer-events: none;
 }
 
-/* ---------- logo intro (desktop, first session load only) ----------
-   Markup + full behaviour: index.html + js/logo-intro.js. Desktop-gated
-   and skip-flash-guarded entirely in CSS/an inline head script (see
-   index.html's bootstrap script, which sets data-skip-intro before first
-   paint for repeat visits / reduced motion / narrow viewports) — no
-   flash of the overlay for anyone who isn't getting the animation.
+/* ---------- logo intro ("set, then placed") ----------
+   Homepage, first load of a session. index.html's head script sets
+   html[data-intro] before first paint, so everything here only exists while
+   the intro runs. Choreography + every tweakable value: js/logo-intro.js.
 
-   Performance note: .logo-intro__mask's mask-size/position never change
-   at runtime — only .logo-intro__wrap's transform (scale) animates, via
-   GSAP. Scaling a wrapper AROUND an already-masked layer lets the
-   browser composite the mask once and just transform the resulting
-   layer, instead of re-rasterising the mask every frame. */
-.logo-intro {
+   data-intro states, in order:
+     pending  — stage up, nothing animating yet (script not started)
+     rising   — letters rising; page hidden behind the stage
+     handoff  — word gliding home; stage dissolving; page assembling
+     landed   — real hero logo has taken over; last copy still settling */
+.logo-intro { display: none; }
+html[data-intro] .logo-intro {
   position: fixed;
   inset: 0;
-  z-index: 999999;
-  overflow: hidden;
-  display: none;
-}
-@media (min-width: 1024px) {
-  .logo-intro { display: block; }
-}
-:root[data-skip-intro="true"] .logo-intro { display: none; }
-@media (prefers-reduced-motion: reduce) {
-  .logo-intro { display: none; }
-}
-.logo-intro__wrap {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  transform-origin: 50% 50%;
-  will-change: transform;
-}
-.logo-intro__mask {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  background-color: var(--color-bg);
-  -webkit-mask-image: url("../assets/images/perro-logo-mask.svg");
-  mask-image: url("../assets/images/perro-logo-mask.svg");
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-position: center;
-  -webkit-mask-size: 45% auto;
-  mask-size: 45% auto;
-}
-.logo-intro__skip {
-  position: absolute;
-  right: 30px;
-  bottom: 30px;
-  z-index: 2;
-  background: transparent;
-  border: 1px solid var(--color-fg);
+  /* Just under body::after's print grain (9999), so the paper texture is
+     continuous from the intro into the page rather than switching on. */
+  z-index: 9998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: var(--color-fg);
-  font: inherit;
-  font-size: 11px;
-  letter-spacing: 0.05em;
-  padding: 10px 18px;
-  cursor: pointer;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 300ms ease;
 }
-.logo-intro__skip.is-visible {
-  opacity: 0.7;
-  pointer-events: auto;
+/* The light-theme logo artwork (perro-logo.svg) is #231F20, a hair off
+   --color-fg — the intro matches the artwork, not the token, so the swap
+   onto the real logo at landing is invisible. */
+:root[data-theme="light"] .logo-intro { color: #231F20; }
+.logo-intro__stage {
+  position: absolute;
+  inset: 0;
+  background: var(--color-bg);
 }
-.logo-intro__skip:hover { opacity: 1; }
-.logo-intro__skip:focus-visible { outline: 2px solid var(--color-fg); outline-offset: 4px; }
-
-/* Scroll lock while the intro runs; main is forced instantly visible
-   (see js/logo-intro.js) rather than fading in on its own default
-   550ms transition, so it doesn't fight GSAP's own hero-entrance tween. */
-html.intro-locked, html.intro-locked body {
-  overflow: hidden;
+.logo-intro__mark {
+  position: relative;
+  width: min(86vw, 1180px); /* overridden by START_WIDTH in the JS config */
+  aspect-ratio: 622.69 / 106.5;
+  transform-origin: 50% 50%;
+  /* Hidden until the script has parked each letter below its baseline, so
+     the finished word never flashes before it has been "set". */
+  visibility: hidden;
+}
+.logo-intro__mark.is-ready { visibility: visible; }
+.logo-intro__mark svg {
+  display: block;
+  width: 100%;
   height: 100%;
+  overflow: hidden; /* the baseline mask the letters rise out of */
 }
-main.intro-skip-fade { transition: none; }
+.logo-intro__letter { fill: currentColor; }
+
+/* Page state while the intro owns the screen. */
+html[data-intro] { overflow: hidden; scrollbar-gutter: stable; }
+html[data-intro] main { opacity: 1; transition: none; }
+html[data-intro] .loader-component { display: none; }
+html[data-intro]:not([data-intro="landed"]) .pr-perro-logo,
+html[data-intro]:not([data-intro="landed"]) .mobile-logo-bleed-img { opacity: 0; }
+/* The theme toggle sits above the stage (z-index 10000), so hide it until
+   it's staggered in with the rest of the hero. */
+html[data-intro="pending"] #themeToggle,
+html[data-intro="rising"] #themeToggle { opacity: 0; }
+/* Hold the site's own scroll-in reveals at their first frame while the
+   stage is up, so they play as part of the handoff instead of unseen. */
+html[data-intro="pending"] .animate-on-scroll.animate,
+html[data-intro="pending"] .zoom-out.animate img,
+html[data-intro="rising"] .animate-on-scroll.animate,
+html[data-intro="rising"] .zoom-out.animate img { animation-play-state: paused; }
 
 /* ---------- header ---------- */
 

@@ -14,7 +14,6 @@
   <link rel="canonical" href="https://pero-seven.vercel.app/" />
   <link rel="icon" href="assets/images/logo.png" type="image/png">
   <link rel="stylesheet" href="css/home.css">
-  <link rel="preload" as="image" href="assets/images/perro-logo-mask.svg" media="(min-width: 1024px)">
   <script>
     try {
       if (localStorage.getItem('perro-theme') === 'light') {
@@ -23,16 +22,25 @@
       if (localStorage.getItem('perro-tex') === 'on') {
         document.documentElement.setAttribute('data-tex', 'on');
       }
-      /* Logo intro is desktop-only, once per session, and skipped under
-         reduced motion — decided here, before first paint, so anyone not
-         getting it never sees the overlay flash on screen. The actual
-         animation logic/eligibility check lives in js/logo-intro.js;
-         this only prevents the FOUC case CSS alone can't (sessionStorage
-         isn't readable from a plain media query). */
-      if (sessionStorage.getItem('perro-intro-played') === '1' ||
-          window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
-          window.innerWidth < 1024) {
-        document.documentElement.setAttribute('data-skip-intro', 'true');
+      /* Logo intro (js/logo-intro.js): decided here, before first paint, so
+         the stage is already up when the page first renders — no flash of
+         the site before it. Once per session, never after an in-site page
+         wipe (that's its own transition), never under reduced motion.
+         ?intro=1 forces it for testing (?intro=slow: forced, at 1/5 speed). */
+      var introForced = /[?&]intro=(1|slow)(&|$)/.test(location.search);
+      var introWipe = JSON.parse(sessionStorage.getItem('perro-page-wipe') || 'null');
+      var introFromWipe = !!introWipe && introWipe.url === location.href &&
+        Date.now() - introWipe.time < 15000;
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches &&
+          (introForced || (!introFromWipe && sessionStorage.getItem('perro-intro-played') !== '1'))) {
+        document.documentElement.setAttribute('data-intro', 'pending');
+        /* Failsafe: if the intro script never starts (blocked, slow, broken),
+           drop the stage rather than leave a blank screen. */
+        setTimeout(function () {
+          if (document.documentElement.getAttribute('data-intro') === 'pending') {
+            document.documentElement.removeAttribute('data-intro');
+          }
+        }, 4000);
       }
     } catch (e) {}
   </script>
@@ -41,10 +49,16 @@
 <body class="home no-js">
 
 <div id="logoIntro" class="logo-intro" aria-hidden="true">
-  <div class="logo-intro__wrap" id="logoIntroWrap">
-    <div class="logo-intro__mask"></div>
+  <div class="logo-intro__stage"></div>
+  <div class="logo-intro__mark" id="logoIntroMark">
+    <svg viewBox="0 0 622.69 106.5" focusable="false">
+      <path class="logo-intro__letter" d="M0,3.15h74.7c19.2,0,27.15,1.65,34.35,6.9,7.2,5.4,11.1,14.7,11.1,26.4,0,13.2-4.65,22.95-13.35,28.05-6.9,4.05-13.05,5.1-31.8,5.1h-36.75v33.6H0V3.15ZM62.25,45.45c7.8,0,10.65-.3,12.6-1.5,2.7-1.65,4.35-4.8,4.35-8.85,0-7.35-3.9-9.6-16.8-9.6h-24.15v19.95h24Z"/>
+      <path class="logo-intro__letter" d="M122.55,3.15h113.25v25.5h-75v11.1h62.1v25.5h-62.1v12.45h79.65v25.5h-117.9V3.15Z"/>
+      <path class="logo-intro__letter" d="M243.1,3.15h74.1c22.8,0,29.4,1.2,35.55,6.15,6.15,4.8,9.45,12.75,9.45,22.65,0,8.1-2.1,15-5.7,19.05-3.15,3.45-6.6,4.95-13.95,6.6,15,4.35,16.65,7.35,17.55,33,.3,7.65.45,8.85,2.7,12.6h-40.05c-.6-4.05-.75-5.25-1.2-13.2-.75-20.85-2.25-22.65-18.45-22.65h-21.75v35.85h-38.25V3.15ZM306.7,46.2c6.3,0,9-.45,10.8-1.65,2.4-1.65,3.9-4.65,3.9-8.4,0-7.2-3.45-9.6-14.4-9.6h-25.65v19.65h25.35Z"/>
+      <path class="logo-intro__letter" d="M366.5,3.15h74.1c22.8,0,29.4,1.2,35.55,6.15,6.15,4.8,9.45,12.75,9.45,22.65,0,8.1-2.1,15-5.7,19.05-3.15,3.45-6.6,4.95-13.95,6.6,15,4.35,16.65,7.35,17.55,33,.3,7.65.45,8.85,2.7,12.6h-40.05c-.6-4.05-.75-5.25-1.2-13.2-.75-20.85-2.25-22.65-18.45-22.65h-21.75v35.85h-38.25V3.15ZM430.09,46.2c6.3,0,9-.45,10.8-1.65,2.4-1.65,3.9-4.65,3.9-8.4,0-7.2-3.45-9.6-14.4-9.6h-25.65v19.65h25.35Z"/>
+      <path class="logo-intro__letter" d="M607.24,14.1c10.35,8.25,15.45,21.3,15.45,39.15,0,36.15-21.6,53.25-67.65,53.25-25.05,0-40.8-4.2-53.1-14.1-10.5-8.55-15.45-21.15-15.45-40.05,0-16.8,5.4-30.15,15.45-38.25,12.15-9.9,28.2-14.1,52.65-14.1s40.35,4.2,52.65,14.1ZM528.64,52.8c0,18.75,8.7,28.2,26.1,28.2s25.8-9.6,25.8-27.75-8.85-27.75-25.95-27.75-25.95,9.6-25.95,27.3Z"/>
+    </svg>
   </div>
-  <button type="button" class="logo-intro__skip" id="logoIntroSkip">Skip</button>
 </div>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
