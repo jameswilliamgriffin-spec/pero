@@ -1010,7 +1010,9 @@ header .submenu a {
        — before the full-bleed middle image: .mobile-landscape-slider { padding-left: 60px; padding-right: 15px; padding-top: 30px; }
          and .row > .gif-slot had padding-top: 30px (from the .pt-30 utility, unoverridden).
        — before centring the top image: .mobile-portrait-slider { padding-left: 15px; padding-right: 60px; } (hugged the left edge) */
-  .mobile-portrait-slider { padding-left: 37.5px; padding-right: 37.5px; }
+  /* 38px, not 37.5px: a half-pixel edge on a scroll container lets a
+     device-pixel sliver of the neighbouring slide show down its side. */
+  .mobile-portrait-slider { padding-left: 38px; padding-right: 38px; }
   .mobile-landscape-slider {
     /* Negative margin cancels the row's own 15px structural gutter (from
        .container-fluid.px-30's 30px minus .row's -15px) so this reaches
@@ -1341,8 +1343,8 @@ footer {
 }
 @media (max-width: 767.98px) {
   .footer-logo-giant {
-    margin-top: 64px;
-    padding-bottom: 150px;
+    margin-top: 44px;
+    padding-bottom: 170px;
   }
 }
 .footer-logo-giant img {
@@ -1418,18 +1420,37 @@ footer {
     position: static;
     display: contents;
   }
+  /* display: contents also drops the wrapper's z-index, so each control
+     needs its own — otherwise .footer-black (positioned, later in the DOM)
+     paints its solid background straight over them. */
   .saturation-knob {
     position: absolute;
+    z-index: 2;
     left: 50%;
-    bottom: 90px;
+    bottom: 72px;
     transform: translateX(-50%);
   }
   .saturation-knob__dial { width: 60px; height: 60px; }
-  .saturation-knob__value { font-size: 15px; }
+  /* The readout hangs off the dial's right side instead of sitting in the
+     flex row, so the box being centred is the dial alone — it then lines
+     up exactly over the (also centred) texture switch below it. */
+  .saturation-knob__value {
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    margin-left: 8px;
+    transform: translateY(-50%);
+    font-size: 15px;
+  }
+  /* margin reset: desktop's -8px margin (hit-area trick) would otherwise
+     shift this absolutely-positioned box 8px off true centre. bottom puts
+     the track's centre level with the 2026 / CMYKern credit line. */
   .tex-switch {
     position: absolute;
+    z-index: 2;
     left: 50%;
-    bottom: 16px;
+    bottom: 3px;
+    margin: 0;
     transform: translateX(-50%);
   }
   /* CSS transforms on SVG shape children resolve in the viewBox's own user
@@ -1584,6 +1605,22 @@ body::after {
 }
 .page-home-link:hover { text-decoration: underline; text-underline-offset: 5px; }
 .page-home-link:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+
+/* Below 1070px (fixed logo band) the link sits centred above the divider,
+   and the gap under the band is tighter; at 1070px+ it stays inline under
+   the in-column logo. Only one of the two is ever displayed, so screen
+   readers get a single link. */
+.page-home-link--top {
+  margin: 0 auto 12px;
+}
+.page-home-link--inline { display: none; }
+@media (max-width: 1069.98px) {
+  .page-top-divider { padding-top: 28px; }
+}
+@media (min-width: 1070px) {
+  .page-home-link--top { display: none; }
+  .page-home-link--inline { display: flex; }
+}
 
 /* ---------- menu page ---------- */
 

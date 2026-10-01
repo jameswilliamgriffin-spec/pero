@@ -77,8 +77,26 @@
     var firstRealIndex = 1;
     var lastRealIndex = items.length; // track.children.length - 2
 
+    // Positions come from the slides' real rendered rects, not
+    // index * clientWidth: clientWidth is rounded to a whole pixel, so on
+    // phones with a fractional viewport width (e.g. 411.43px) that product
+    // drifts a fraction of a pixel per slide, leaving a sliver of the
+    // previous slide visible on the left.
+    function slideWidth() {
+      return scroller.getBoundingClientRect().width;
+    }
+    function offsetOf(index) {
+      var slide = track.children[index];
+      return slide.getBoundingClientRect().left - scroller.getBoundingClientRect().left;
+    }
+    var lastTarget = null;
     function jumpTo(index) {
-      scroller.scrollLeft = index * scroller.clientWidth;
+      var target = scroller.scrollLeft + offsetOf(index);
+      // Engines that only scroll in whole pixels can't hit a fractional
+      // target exactly; don't keep re-asking for the same one forever.
+      if (lastTarget !== null && Math.abs(target - lastTarget) < 0.01) return;
+      lastTarget = target;
+      scroller.scrollLeft = target;
     }
     // Open on real slide 1, not the leading clone sitting before it.
     jumpTo(firstRealIndex);
@@ -87,16 +105,17 @@
     scroller.addEventListener('scroll', function () {
       clearTimeout(settleTimer);
       settleTimer = setTimeout(function () {
-        var width = scroller.clientWidth;
+        var width = slideWidth();
         if (!width) return;
         var index = Math.round(scroller.scrollLeft / width);
         if (index <= 0) index = lastRealIndex;
         else if (index >= lastRealIndex + 1) index = firstRealIndex;
         // Re-snap exactly even when landing on a real slide, not just when
         // wrapping off a clone — real-device momentum scrolling can settle
-        // a couple of px short of the true snap point, which shows up as a
-        // sliver of the neighbouring slide still visible at rest.
-        if (Math.abs(scroller.scrollLeft - index * width) > 0.5) jumpTo(index);
+        // short of the true snap point, which shows up as a sliver of the
+        // neighbouring slide still visible at rest.
+        if (Math.abs(offsetOf(index)) > 0.1) jumpTo(index);
+        else lastTarget = null;
       }, 120);
     }, { passive: true });
 
@@ -127,7 +146,7 @@
       window.removeEventListener('pointercancel', endDrag);
 
       if (moved) {
-        var slideWidth = scroller.clientWidth;
+        var slideWidth = scroller.getBoundingClientRect().width;
         var nearest = Math.round(scroller.scrollLeft / slideWidth) * slideWidth;
         scroller.scrollTo({ left: nearest, behavior: 'smooth' });
       }
