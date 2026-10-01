@@ -1147,7 +1147,7 @@ header .submenu a {
 
 .ticker-bar {
   width: 100%;
-  height: 36px;
+  height: 45px;
   overflow: hidden;
   background: #0A0A0A;
   display: flex;
@@ -1169,18 +1169,87 @@ header .submenu a {
   to   { transform: translateX(-50%); }
 }
 
+.ticker-bar:hover .ticker-bar__track { animation-play-state: paused; }
+
 @media (prefers-reduced-motion: reduce) {
   .ticker-bar__track { animation-play-state: paused; }
+}
+
+/* ---------- link tickers (menu / book) ----------
+   Two big clickable bands stacked above the status ticker, alternating
+   colour and direction: menu runs right-to-left on dark, book runs
+   left-to-right on lime, then the status ticker right-to-left on dark.
+   Colours are the fixed brand accents (like the status ticker), so the
+   alternation holds in both site themes. Band height and type match the
+   status ticker exactly, so all three read as one set. Filled and looped by
+   js/ticker.js. */
+.link-ticker {
+  display: flex;
+  align-items: center;
+  height: 45px; /* = .ticker-bar */
+  overflow: hidden;
+  text-decoration: none;
+}
+.link-ticker:focus-visible {
+  outline: 2px solid var(--accent-lime);
+  outline-offset: -6px;
+}
+.link-ticker--book:focus-visible { outline-color: var(--accent-dark); }
+.link-ticker--menu { background: #0A0A0A; }
+.link-ticker--book { background: var(--accent-lime); }
+/* Colour lives on the track, not the <a>, so the global a:hover
+   { color: inherit } rule can't repaint the text on hover. */
+.link-ticker--menu .link-ticker__track { color: var(--accent-lime); }
+.link-ticker--book .link-ticker__track { color: var(--accent-dark); }
+
+.link-ticker__track {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  will-change: transform;
+  animation-name: ticker-scroll;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+.link-ticker__track--reverse { animation-direction: reverse; }
+.link-ticker:hover .link-ticker__track,
+.link-ticker:focus-visible .link-ticker__track { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) {
+  .link-ticker__track { animation-play-state: paused; }
+}
+
+.link-ticker__unit {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.2em;
+  padding-right: 1.2em;
+  font-family: "Departure Mono", monospace;
+  font-size: 17.5px; /* = .ticker-unit */
+  line-height: 1;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+/* Fixed 1px-per-pixel arrow (the 13x9 grid at 1x) rather than em-sized:
+   17.5px type would put arrow pixels at fractional widths and smear the
+   pixel-art edges. */
+.link-ticker__arrow {
+  display: block;
+  flex-shrink: 0;
+  width: 13px;
+  height: 9px;
+  fill: currentColor;
+  shape-rendering: crispEdges;
 }
 
 .ticker-unit {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 0 24px;
+  gap: 12.5px;
+  padding: 0 30px;
   font-family: "Departure Mono", monospace;
-  font-size: 14px;
-  line-height: 21px;
+  font-size: 17.5px;
+  line-height: 26px;
   letter-spacing: -0.01em;
   text-transform: uppercase;
   color: var(--accent-lime);
@@ -1192,8 +1261,8 @@ header .submenu a {
 }
 .ticker-dot {
   display: inline-block;
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   background: var(--accent-lime);
   animation-name: ticker-blink;

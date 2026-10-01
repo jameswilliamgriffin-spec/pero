@@ -370,10 +370,13 @@
     footerObserver.observe(footerEl);
   }
 
-  /* Park the sticky hero logo just above the footer map strip. */
+  /* Park the sticky hero logo just above the footer map strip — and above
+     the menu/book ticker bands, which sit between the page and the footer. */
+  var linkTickers = document.querySelector('.link-tickers');
   function setFooterHeight() {
     if (window.innerWidth < LG || !logoImg || !footerEl) return;
-    logoImg.style.marginBottom = (footerEl.offsetHeight + 100) + 'px';
+    var tickers = linkTickers ? linkTickers.offsetHeight : 0;
+    logoImg.style.marginBottom = (footerEl.offsetHeight + tickers + 100) + 'px';
   }
 
   function debounce(fn, wait) {

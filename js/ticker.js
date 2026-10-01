@@ -18,11 +18,19 @@
     track: 'Kiss My Name'
   };
 
-  var PX_PER_SECOND = 55;
+  var PX_PER_SECOND = 55; // shared by all three tickers, so they move at one pace
   var MIN_REPEATS = 4;
 
   var track = document.getElementById('tickerTrack');
-  if (!track) return;
+
+  /* Menu/book link tickers (.link-ticker__track): each ships one unit in
+     the HTML; capture it once so re-renders always repeat the original. */
+  var linkTracks = Array.prototype.map.call(
+    document.querySelectorAll('.link-ticker__track'),
+    function (el) { return { el: el, unitHTML: el.innerHTML }; }
+  );
+
+  if (!track && !linkTracks.length) return;
 
   function escapeHTML(str) {
     var div = document.createElement('div');
@@ -58,9 +66,9 @@
     return html;
   }
 
-  function measureWidth(html) {
+  function measureWidth(el, html) {
     var probe = document.createElement('div');
-    probe.className = 'ticker-bar__track';
+    probe.className = el.className;
     probe.style.position = 'absolute';
     probe.style.visibility = 'hidden';
     probe.style.animation = 'none';
@@ -71,35 +79,48 @@
     return width;
   }
 
-  function render() {
-    var unitHTML = buildUnitHTML();
-    var unitWidth = measureWidth(unitHTML) || 300;
+  function fillTrack(el, unitHTML, pxPerSecond) {
+    var unitWidth = measureWidth(el, unitHTML) || 300;
 
     /* Repeat the unit until one "half" comfortably exceeds twice the
        viewport width, then duplicate that half once more — animating
        exactly -50% loops seamlessly since copy 2 always lands where
-       copy 1 started. */
+       copy 1 started (and the same holds run in reverse). */
     var targetWidth = window.innerWidth * 2;
     var repeats = Math.max(MIN_REPEATS, Math.ceil(targetWidth / unitWidth));
 
     var half = '';
     for (var i = 0; i < repeats; i++) half += unitHTML;
-    track.innerHTML = half + half;
+    el.innerHTML = half + half;
 
     requestAnimationFrame(function () {
-      var halfWidth = track.scrollWidth / 2;
-      track.style.animationDuration = (halfWidth / PX_PER_SECOND) + 's';
+      var halfWidth = el.scrollWidth / 2;
+      el.style.animationDuration = (halfWidth / pxPerSecond) + 's';
     });
   }
 
-  render();
+  function renderStatus() {
+    if (track) fillTrack(track, buildUnitHTML(), PX_PER_SECOND);
+  }
 
-  if (typeof subscribeKitchenStatus === 'function') subscribeKitchenStatus(render);
-  if (typeof subscribeWeatherStatus === 'function') subscribeWeatherStatus(render);
+  function renderLinks() {
+    linkTracks.forEach(function (t) { fillTrack(t.el, t.unitHTML, PX_PER_SECOND); });
+  }
+
+  renderStatus();
+  renderLinks();
+  // Departure Mono may land after first render; re-measure once it has so
+  // the loop width matches the real glyph widths.
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function () { renderStatus(); renderLinks(); });
+  }
+
+  if (typeof subscribeKitchenStatus === 'function') subscribeKitchenStatus(renderStatus);
+  if (typeof subscribeWeatherStatus === 'function') subscribeWeatherStatus(renderStatus);
 
   var resizeTimer;
   window.addEventListener('resize', function () {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(render, 200);
+    resizeTimer = setTimeout(function () { renderStatus(); renderLinks(); }, 200);
   });
 })();
