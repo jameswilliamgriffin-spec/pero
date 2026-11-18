@@ -37,19 +37,7 @@
     { start: '23:00', end: '23:59', status: STATUS.SIESTA }
   ];
 
-  var BRUNCH_AND_DINNER = [
-    { start: '00:00', end: '07:59', status: STATUS.SIESTA },
-    { start: '08:00', end: '09:59', status: STATUS.PREP },
-    { start: '10:00', end: '10:59', status: STATUS.FIRING_UP },
-    { start: '11:00', end: '13:29', status: STATUS.SERVICE },
-    { start: '13:30', end: '13:59', status: STATUS.LAST_ORDERS },
-    { start: '14:00', end: '16:59', status: STATUS.PREP },
-    { start: '17:00', end: '17:59', status: STATUS.FIRING_UP },
-    { start: '18:00', end: '22:29', status: STATUS.SERVICE },
-    { start: '22:30', end: '22:59', status: STATUS.LAST_ORDERS },
-    { start: '23:00', end: '23:59', status: STATUS.SIESTA }
-  ];
-
+  /* Tuesday to Saturday, 18:00 till late. No brunch service. */
   var SCHEDULE = [
     { day: 'Sun', ranges: CLOSED_ALL_DAY },
     { day: 'Mon', ranges: CLOSED_ALL_DAY },
@@ -57,7 +45,7 @@
     { day: 'Wed', ranges: DINNER_ONLY },
     { day: 'Thu', ranges: DINNER_ONLY },
     { day: 'Fri', ranges: DINNER_ONLY },
-    { day: 'Sat', ranges: BRUNCH_AND_DINNER }
+    { day: 'Sat', ranges: DINNER_ONLY }
   ];
 
   var DEFAULT_INTERVAL_MS = 45000;
