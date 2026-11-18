@@ -31,3 +31,6 @@
 @media (prefers-reduced-motion: reduce) {
   .faq-question button, .faq-mark::before, .faq-mark::after, .faq-answer { transition: none; }
 }
+
+.faq-answer-inner a { color: inherit; text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+.faq-answer-inner a:hover { opacity: .7; }
