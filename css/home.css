@@ -1639,6 +1639,14 @@ body::after {
 
 .menu-image-col { text-align: center; }
 
+/* "Sample menu" note above the menu image — same type as the FAQ intro. */
+.menu-intro { margin: 8px auto 40px; }
+.menu-kicker { margin: 0; font-size: clamp(17px, 1.9vw, 25px); line-height: 1.2; }
+.menu-intro-copy { margin: 16px auto 0; max-width: 38ch; opacity: .58; font-size: 13px; }
+@media (max-width: 767px) {
+  .menu-intro { margin-bottom: 28px; }
+}
+
 .menu-image {
   display: inline-block;
   width: 100%;
