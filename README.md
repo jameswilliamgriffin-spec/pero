@@ -47,7 +47,7 @@ None of these are hardcoded in the codebase — `server.js` reads them all from 
 
 ## Ticker now-playing (Spotify)
 
-`GET /api/now-playing` returns the track the restaurant's Spotify account is playing; if nothing is, the last track played in the past 30 minutes; otherwise a random track from `SPOTIFY_PLAYLIST_ID`, held for 4 minutes. `js/ticker.js` only asks for it, and only shows it, while the kitchen status is Service or Last orders (`OPEN_STATUSES` at the top of that file), polling every 30s. Responses are edge-cached for 20s.
+`GET /api/now-playing` returns the track the restaurant's Spotify account is playing; if nothing is, the last track played in the past 30 minutes; otherwise a random track from `SPOTIFY_PLAYLIST_ID`, held for 4 minutes. `js/ticker.js` only asks for it, and only shows it, while the kitchen status is Prep mode, Firing up, Service or Last orders, i.e. Tue–Sat 09:00–23:00 (`OPEN_STATUSES` at the top of that file), polling every 30s. Responses are edge-cached for 20s.
 
 Setup is one-time: create an app at developer.spotify.com/dashboard while signed in as the restaurant's account (Redirect URI `http://127.0.0.1:8888/callback`, Web API ticked), put its ID and secret in `.env`, run `npm run spotify-auth` and approve in the browser. Then copy the four `SPOTIFY_*` values into Vercel.
 

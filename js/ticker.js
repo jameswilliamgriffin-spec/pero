@@ -9,15 +9,15 @@
    Now playing comes from GET /api/now-playing (server.js), which returns
    the Spotify track playing now, else one played recently, else a random
    pick from the house playlist. It's only requested, and only shown,
-   while the kitchen status is one of OPEN_STATUSES.
+   while the kitchen status is one of OPEN_STATUSES (everything but Siesta).
    ========================================================================== */
 
 (function () {
   'use strict';
 
-  /* Kitchen statuses that count as "open" — outside these the now-playing
-     item is hidden and Spotify isn't asked at all. */
-  var OPEN_STATUSES = ['Service', 'Last orders'];
+  /* Kitchen statuses when the now-playing item is shown (from prep at 09:00
+     until closing, Tue–Sat). On Siesta it's hidden and Spotify isn't asked. */
+  var OPEN_STATUSES = ['Prep mode', 'Firing up', 'Service', 'Last orders'];
   var NOW_PLAYING_URL = '/api/now-playing';
   var NOW_PLAYING_POLL_MS = 30000;
 
