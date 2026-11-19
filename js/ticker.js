@@ -5,18 +5,23 @@
    weather-status.js). Renders the repeating unit into #tickerTrack and
    drives a CSS transform loop — this file never re-derives kitchen/weather
    logic itself, it only consumes the two existing modules.
+
+   Now playing comes from GET /api/now-playing (server.js), which returns
+   the Spotify track playing now, else one played recently, else a random
+   pick from the house playlist. It's only requested, and only shown,
+   while the kitchen status is one of OPEN_STATUSES.
    ========================================================================== */
 
 (function () {
   'use strict';
 
-  /* Static placeholder — swap the fetch that populates this for a real
-     Spotify "currently playing" call later; the template below doesn't
-     need to change, just where `nowPlaying` comes from. */
-  var nowPlaying = {
-    artist: 'Antony and the Johnsons',
-    track: 'Kiss My Name'
-  };
+  /* Kitchen statuses that count as "open" — outside these the now-playing
+     item is hidden and Spotify isn't asked at all. */
+  var OPEN_STATUSES = ['Service', 'Last orders'];
+  var NOW_PLAYING_URL = '/api/now-playing';
+  var NOW_PLAYING_POLL_MS = 30000;
+
+  var nowPlaying = null; // { artist, track } or null
 
   var PX_PER_SECOND = 55; // shared by all three tickers, so they move at one pace
   var MIN_REPEATS = 4;
@@ -38,16 +43,26 @@
     return div.innerHTML;
   }
 
+  function currentKitchenStatus() {
+    return (typeof getKitchenStatus === 'function') ? getKitchenStatus() : '';
+  }
+
+  function isOpen() {
+    return OPEN_STATUSES.indexOf(currentKitchenStatus()) !== -1;
+  }
+
   function buildUnitHTML() {
-    var kitchenStatus = (typeof getKitchenStatus === 'function') ? getKitchenStatus() : '';
+    var kitchenStatus = currentKitchenStatus();
     var weather = (typeof getWeatherStatus === 'function') ? getWeatherStatus() : null;
 
     var html = '';
 
-    html += '<span class="ticker-unit">';
-    html += '<span class="ticker-play" aria-hidden="true">▶</span>';
-    html += '<span>Now playing: ' + escapeHTML(nowPlaying.artist) + ' – ' + escapeHTML(nowPlaying.track) + '</span>';
-    html += '</span>';
+    if (nowPlaying && isOpen()) {
+      html += '<span class="ticker-unit">';
+      html += '<span class="ticker-play" aria-hidden="true">▶</span>';
+      html += '<span>Now playing: ' + escapeHTML(nowPlaying.artist) + ' – ' + escapeHTML(nowPlaying.track) + '</span>';
+      html += '</span>';
+    }
 
     if (kitchenStatus) {
       html += '<span class="ticker-unit">';
@@ -115,7 +130,42 @@
     document.fonts.ready.then(function () { renderStatus(); renderLinks(); });
   }
 
-  if (typeof subscribeKitchenStatus === 'function') subscribeKitchenStatus(renderStatus);
+  /* Only re-render when the song actually changes — a re-render restarts
+     the marquee, so polling must not cause a visible jump every 30s. */
+  function setNowPlaying(next) {
+    var nextKey = next ? next.artist + '\u0000' + next.track : '';
+    var prevKey = nowPlaying ? nowPlaying.artist + '\u0000' + nowPlaying.track : '';
+    nowPlaying = next;
+    if (nextKey !== prevKey) renderStatus();
+  }
+
+  function refreshNowPlaying() {
+    if (!track) return;
+    if (!isOpen()) { setNowPlaying(null); return; }
+    if (typeof fetch !== 'function') return;
+    fetch(NOW_PLAYING_URL, { headers: { Accept: 'application/json' } })
+      .then(function (res) { return res.ok ? res.json() : null; })
+      .then(function (data) {
+        setNowPlaying(data && data.source && data.artist && data.track
+          ? { artist: String(data.artist), track: String(data.track) }
+          : null);
+      })
+      .catch(function () { /* keep whatever is showing; try again next poll */ });
+  }
+
+  if (typeof subscribeKitchenStatus === 'function') {
+    subscribeKitchenStatus(function () { renderStatus(); refreshNowPlaying(); });
+  } else {
+    refreshNowPlaying();
+  }
+
+  setInterval(function () {
+    if (!document.hidden) refreshNowPlaying();
+  }, NOW_PLAYING_POLL_MS);
+
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden) refreshNowPlaying();
+  });
   if (typeof subscribeWeatherStatus === 'function') subscribeWeatherStatus(renderStatus);
 
   var resizeTimer;

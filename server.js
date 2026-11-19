@@ -217,6 +217,163 @@ app.post('/api/update-manifest', requireAdmin, (req, res) => {
   }
 });
 
+/* ----------------------------------------
+   SPOTIFY — NOW PLAYING for the status ticker (js/ticker.js).
+   Order of preference:
+     1. whatever the restaurant's account is playing right now
+     2. the last track it played, if that was within SPOTIFY_RECENT_WINDOW_MS
+     3. a random track from SPOTIFY_PLAYLIST_ID, held for
+        SPOTIFY_FALLBACK_HOLD_MS so it reads like a song actually playing
+   Opening hours are decided client-side (the ticker only asks while the
+   restaurant is open). Auth is a long-lived refresh token from the
+   one-time `npm run spotify-auth` script; nothing here ever sees the
+   account's password. Any failure returns { source: null } and the ticker
+   simply leaves the now-playing item out.
+   ---------------------------------------- */
+
+const SPOTIFY_RECENT_WINDOW_MS   = 30 * 60 * 1000;
+const SPOTIFY_FALLBACK_HOLD_MS   = 4 * 60 * 1000;
+const SPOTIFY_PLAYLIST_CACHE_MS  = 60 * 60 * 1000;
+const SPOTIFY_PLAYLIST_MAX_PAGES = 10; // 100 tracks a page
+
+const spotifyState = {
+  accessToken: null,
+  expiresAt: 0,
+  playlist: null,
+  playlistFetchedAt: 0,
+  fallback: null,
+  fallbackUntil: 0
+};
+
+function spotifyConfigured() {
+  return Boolean(
+    process.env.SPOTIFY_CLIENT_ID &&
+    process.env.SPOTIFY_CLIENT_SECRET &&
+    process.env.SPOTIFY_REFRESH_TOKEN
+  );
+}
+
+async function spotifyAccessToken() {
+  if (spotifyState.accessToken && Date.now() < spotifyState.expiresAt - 60 * 1000) {
+    return spotifyState.accessToken;
+  }
+  const basic = Buffer.from(
+    process.env.SPOTIFY_CLIENT_ID + ':' + process.env.SPOTIFY_CLIENT_SECRET
+  ).toString('base64');
+  const res = await fetch('https://accounts.spotify.com/api/token', {
+    method: 'POST',
+    headers: {
+      Authorization: 'Basic ' + basic,
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: new URLSearchParams({
+      grant_type: 'refresh_token',
+      refresh_token: process.env.SPOTIFY_REFRESH_TOKEN
+    })
+  });
+  if (!res.ok) throw new Error('Spotify token refresh failed: ' + res.status);
+  const data = await res.json();
+  spotifyState.accessToken = data.access_token;
+  spotifyState.expiresAt = Date.now() + (data.expires_in || 3600) * 1000;
+  return spotifyState.accessToken;
+}
+
+async function spotifyGet(pathAndQuery) {
+  const token = await spotifyAccessToken();
+  const res = await fetch('https://api.spotify.com/v1' + pathAndQuery, {
+    headers: { Authorization: 'Bearer ' + token }
+  });
+  if (res.status === 204) return null; // nothing playing
+  if (!res.ok) {
+    const err = new Error('Spotify ' + pathAndQuery.split('?')[0] + ' returned ' + res.status);
+    err.status = res.status;
+    throw err;
+  }
+  return res.json();
+}
+
+function spotifyTrackInfo(item) {
+  if (!item || !item.name || !Array.isArray(item.artists) || !item.artists.length) return null;
+  return {
+    track: item.name,
+    artist: item.artists.map((a) => a.name).filter(Boolean).join(', ')
+  };
+}
+
+async function spotifyPlaylistTracks() {
+  const id = process.env.SPOTIFY_PLAYLIST_ID;
+  if (!id) return [];
+  if (spotifyState.playlist && Date.now() - spotifyState.playlistFetchedAt < SPOTIFY_PLAYLIST_CACHE_MS) {
+    return spotifyState.playlist;
+  }
+
+  // Spotify has been moving playlist contents from /tracks to /items;
+  // try the newer path first and fall back, reading either entry shape.
+  const bases = ['/playlists/' + encodeURIComponent(id) + '/items', '/playlists/' + encodeURIComponent(id) + '/tracks'];
+  let lastErr = null;
+  for (const base of bases) {
+    try {
+      const tracks = [];
+      for (let page = 0; page < SPOTIFY_PLAYLIST_MAX_PAGES; page++) {
+        const data = await spotifyGet(base + '?limit=100&offset=' + page * 100);
+        const entries = (data && data.items) || [];
+        entries.forEach((entry) => {
+          const info = spotifyTrackInfo(entry && (entry.item || entry.track));
+          if (info) tracks.push(info);
+        });
+        if (!data || !data.next) break;
+      }
+      spotifyState.playlist = tracks;
+      spotifyState.playlistFetchedAt = Date.now();
+      return tracks;
+    } catch (err) {
+      lastErr = err;
+      if (err.status !== 404 && err.status !== 410) break;
+    }
+  }
+  throw lastErr;
+}
+
+async function spotifyNowPlaying() {
+  const current = await spotifyGet('/me/player/currently-playing');
+  const playing = current && current.is_playing && spotifyTrackInfo(current.item);
+  if (playing) return Object.assign({ source: 'playing' }, playing);
+
+  const recent = await spotifyGet('/me/player/recently-played?limit=1');
+  const last = recent && recent.items && recent.items[0];
+  if (last && Date.now() - Date.parse(last.played_at) < SPOTIFY_RECENT_WINDOW_MS) {
+    const info = spotifyTrackInfo(last.track);
+    if (info) return Object.assign({ source: 'recent' }, info);
+  }
+
+  if (!spotifyState.fallback || Date.now() > spotifyState.fallbackUntil) {
+    const tracks = await spotifyPlaylistTracks();
+    spotifyState.fallback = tracks.length
+      ? tracks[Math.floor(Math.random() * tracks.length)]
+      : null;
+    spotifyState.fallbackUntil = Date.now() + SPOTIFY_FALLBACK_HOLD_MS;
+  }
+  if (spotifyState.fallback) return Object.assign({ source: 'playlist' }, spotifyState.fallback);
+  return { source: null };
+}
+
+app.get('/api/now-playing', async (req, res) => {
+  if (!spotifyConfigured()) {
+    res.set('Cache-Control', 'no-store');
+    return res.json({ source: null });
+  }
+  try {
+    const result = await spotifyNowPlaying();
+    // Short shared cache so every visitor's poll doesn't hit Spotify.
+    res.set('Cache-Control', 'public, max-age=0, s-maxage=20, stale-while-revalidate=40');
+    res.json(result);
+  } catch (err) {
+    console.error('now-playing failed:', err.message);
+    res.set('Cache-Control', 'no-store');
+    res.json({ source: null });
+  }
+});
+
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
